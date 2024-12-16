@@ -5,6 +5,7 @@ import User from '@/models/User';
 import OTP from '@/models/Otp';
 import { sendEmailOtp } from '@/utils/SendOtp';
 import { generateOtp } from '@/utils/GenerateOtp';
+import { sendWelcomeMail } from '@/utils/SendWelcomeMail';
 
 export async function POST(req: NextRequest) {
   try {
@@ -92,6 +93,8 @@ export async function POST(req: NextRequest) {
 
       // Remove the used OTP after successful registration
       await OTP.deleteOne({ email, otp: emailOtp });
+
+      await sendWelcomeMail(email, firstName);
 
       // Respond with success
       return NextResponse.json({ 

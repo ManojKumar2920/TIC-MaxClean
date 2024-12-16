@@ -8,7 +8,6 @@ import logo from "@/assets/logo.png";
 import GoogleLoginButton from "@/components/GoogleSigninBtn";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { sendWelcomeMail } from "@/utils/SendWelcomeMail";
 
 const SignupPage = () => {
   const [formData, setFormData] = useState({
@@ -110,7 +109,7 @@ const SignupPage = () => {
 
         toast.success("Signup successful! Redirecting to Sign in...");
 
-        await sendWelcomeMail(data.email, data.firstName);
+
         // If OTP verification is successful, sign the user in
         router.push('/signin')
       } catch (err) {
