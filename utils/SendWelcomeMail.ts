@@ -14,7 +14,7 @@ export async function sendWelcomeMail(email: string, name: string) {
   const mailOptions = {
     from: process.env.NODE_MAILER_ID,
     to: email,
-    subject: "Email OTP Verification",
+    subject: `Hurray!!! Welcome to MaxClean Fam ${name}!`,
     html: `<!DOCTYPE html>
 <html lang="en">
 <head>
