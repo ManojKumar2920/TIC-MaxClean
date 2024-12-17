@@ -27,32 +27,6 @@ const Navbar = () => {
   }, []);
   
 
-  const handleSignout = async () => {
-    try {
-      // Clear tokens from cookies via API
-      const response = await fetch("/api/auth/signout", { 
-        method: "POST",
-        credentials: 'include' // Ensure cookies are sent with the request
-      });
-      
-      if (response.ok) {
-        // Remove refresh token using cookies-next
-        deleteCookie('refreshToken');
-        
-        // Update local authentication state
-        setIsAuthenticated(false);
-        
-        // Redirect to the login page
-        router.push("/signin");
-      } else {
-        // Handle potential sign-out errors
-        console.error("Sign out failed");
-      }
-    } catch (err) {
-      console.error("Error logging out:", err);
-    }
-  };
-
 
   return (
     <nav className="fixed md:block hidden top-4 !z-[200] w-[80%]  m-auto  rounded-[10px] bg-[#00000094]/20 bg-opacity-70 px-12 py-4 text-white shadow-lg backdrop-blur-lg">
@@ -113,12 +87,12 @@ const Navbar = () => {
               </svg>
             </Link>
           ) : (
-            <button
-              onClick={handleSignout}
-              className="text-white bg-black whitespace-nowrap rounded-[8px] px-5 py-2"
+            <Link
+            href={'/dashboard'}
+              className="text-black bg-transparent border-black border-2 whitespace-nowrap rounded-[8px] px-5 py-2"
             >
-              Logout
-            </button>
+              Dashboard
+            </Link>
           )}
           <Link href="/schedule" className="text-white">
             <button className="bt-c  font-normal text-[20px]  bg-black whitespace-nowrap rounded-[8px] px-5 py-2">

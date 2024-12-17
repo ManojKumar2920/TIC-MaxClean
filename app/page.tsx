@@ -129,8 +129,7 @@ const Steps = () => {
                 Signup/ Login
               </h3>
               <p className="text-sm text-left">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                eiusmod tempor.
+              Create an account or log in to get started with our services.
               </p>
             </div>
           </div>
@@ -154,8 +153,7 @@ const Steps = () => {
                 Fill Our Form
               </h3>
               <p className="text-sm text-left">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                eiusmod tempor.
+              Provide your vehicle details and preferences for a personalized wash.
               </p>
             </div>
           </div>
@@ -179,8 +177,7 @@ const Steps = () => {
                 Schedule a Wash
               </h3>
               <p className="text-sm text-left">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                eiusmod tempor.
+              Choose a convenient time and book your wash in just a few clicks.
               </p>
             </div>
           </div>
