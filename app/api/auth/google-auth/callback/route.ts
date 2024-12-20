@@ -66,9 +66,6 @@ export async function GET(req: Request) {
     const token = jwt.sign(
       {
         email,
-        firstName,
-        lastName,
-        role: user.role,
         userId: user._id, // Include user ID in the token
       },
       process.env.JWT_SECRET!,

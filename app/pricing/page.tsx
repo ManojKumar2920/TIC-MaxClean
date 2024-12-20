@@ -1,22 +1,14 @@
 "use client";
 import React from "react";
-// import Navbar from "@/pages/NavBar";
 import Banner from "@/assets/pricing.png";
 import MobileNav from "@/components/MobileNavbar";
 import { useState } from "react";
-import logo from "@/assets/logo.png";
-// import x from "@/assets/x.png";
-// import fb from "@/assets/fb.png";
-// import insta from "@/assets/insta.png";
-// import git from "@/assets/git.png";
-// import { useLocation } from "react-router";
 import Link from "next/link";
-import { useEffect } from "react";
 import Faq from "@/components/Faq";
 import Footer from "@/components/Footer";
-import { usePathname } from "next/navigation";
 import Navbar from "@/components/NavBar";
-const Pricing = () => {
+
+export const Pricing = () => {
   const [isYearly, setIsYearly] = useState(false);
   return (
     <div className="w-full overflow-hidden flex flex-col items-center justify-center">
@@ -81,7 +73,7 @@ const PricingCard = () => {
   const plans = [
     {
       title: "Bi-weekly",
-      price: "₹1099",
+      price: "₹1199",
       frequency: "/month",
       features: [
         "Exterior water wash",
@@ -97,7 +89,7 @@ const PricingCard = () => {
     },
     {
       title: "Once a Week",
-      price: "₹2099",
+      price: "₹2199",
       frequency: "/month",
       features: [
         "Exterior water wash",
@@ -179,7 +171,7 @@ const PricingCard2 = () => {
   const plans = [
     {
       title: "Car Foam Wash",
-      price: "₹649",
+      price: "₹679",
       frequency: "/per wash",
       features: [
         "Exterior water wash",
@@ -194,35 +186,33 @@ const PricingCard2 = () => {
       ],
     },
     {
-      title: "Bike Foam Wash",
-      price: "₹449",
+      title: "Car + Bike Wash Combo",
+      price: "₹899",
       frequency: "/per wash",
       features: [
-        "Bike exterior pressure water wash",
-        "Bike exterior pressure foam wash",
-        "Hand scrub",
+        "Exterior water wash",
+        "Exterior foam wash",
+        "Interior vacuum",
+        "Interior dusting & wiping",
+        "Interior mat / carpet cleaning",
+        "Glass clean and shine",
         "Towel dry cleaning",
-        "Air top-up",
+        "Air top up",
         "Tyre polish",
       ],
     },
   ];
-  const plans2 = [
-    {
-      title: "Car + Bike Wash Combo",
-      price: "₹899",
-      frequency: "/per wash",
-      features: ["Includes all services from car and bike foam wash"],
-    },
-    {
-      title: "Battery Jump Start",
-      price: "₹349",
-      frequency: "/per wash",
-      features: [
-        "Introducing our Emergency Jump Start Plan, essential for car owners stranded with a dead battery. We'll come to you and get your car running again in no time. Ideal for busy individuals needing immediate help on the road. Stay stress-free and on the move with our reliable service!",
-      ],
-    },
-  ];
+  // const plans2 = [
+    
+  //   {
+  //     title: "Battery Jump Start",
+  //     price: "₹349",
+  //     frequency: "/per wash",
+  //     features: [
+  //       "Introducing our Emergency Jump Start Plan, essential for car owners stranded with a dead battery. We'll come to you and get your car running again in no time. Ideal for busy individuals needing immediate help on the road. Stay stress-free and on the move with our reliable service!",
+  //     ],
+  //   },
+  // ];
 
   return (
     <div className="w-full flex flex-wrap  z-[100] -mt-40 md:-mt-60 px-10 md:px-0  justify-center gap-8 py-16">
@@ -260,7 +250,7 @@ const PricingCard2 = () => {
         </div>
       ))}
 
-      {plans2.map((plan, index) => (
+      {/* {plans2.map((plan, index) => (
         <div
           key={index}
           className="max-w-lg w-full relative bg-white text-black shadow-md rounded-lg   border-[0.5px]  border-[#D70006]/50 pb-10"
@@ -291,7 +281,7 @@ const PricingCard2 = () => {
             </Link>
           </div>
         </div>
-      ))}
+      ))} */}
     </div>
   );
 };

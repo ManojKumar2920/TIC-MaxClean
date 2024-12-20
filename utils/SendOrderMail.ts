@@ -19,7 +19,7 @@ export const sendOrderMail = async (
 
   const mailOptions = {
     from: process.env.NODE_MAILER_ID, // Sender email
-    to: email, // Recipient email
+    to: [email, "maxcleanbusiness@gmail.com", "renuka.vvss@gmail.com"], // Recipient email
     subject: "Order Confirmation - Your Order is Successful",
     html: `<!DOCTYPE html>
 <html lang="en">

@@ -27,7 +27,7 @@ const ScheduleWash = () => {
     <div className="w-full overflow-hidden flex flex-col items-center justify-center">
       <Navbar />
       <MobileNavbar />
-      <Hero />
+      {/* <Hero /> */}
       <Booking />
       <Faq />
       <Footer />
@@ -359,7 +359,7 @@ const Booking = () => {
   };
 
   return (
-<div className="py-20 w-full flex flex-col h-full items-center gap-14">
+<div className="py-20 mt-10 w-full flex flex-col h-full items-center gap-14">
   <h1 className="md:text-[60px] text-5xl text-center">
     Book an appointment <span className="text-[#D70006]">now</span>
   </h1>

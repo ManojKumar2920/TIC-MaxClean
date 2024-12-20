@@ -4,7 +4,6 @@ import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 // import Image from "next/image";
 import logo from "@/assets/logo.png";
-import { getCookie, deleteCookie } from 'cookies-next';
 
 const Navbar = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -54,14 +53,6 @@ const Navbar = () => {
             Reviews
           </Link>
           <Link
-            href="/connect"
-            className={`${
-              isActive("/connect") ? "text-white" : "text-black"
-            } hover:text-[#E50914]`}
-          >
-            Get App
-          </Link>
-          <Link
             href="/pricing"
             className={`${
               isActive("/Pricing") ? "text-white" : "text-black"
@@ -91,7 +82,7 @@ const Navbar = () => {
             href={'/dashboard'}
               className="text-black bg-transparent border-black border-2 whitespace-nowrap rounded-[8px] px-5 py-2"
             >
-              Dashboard
+              Order History
             </Link>
           )}
           <Link href="/schedule" className="text-white">

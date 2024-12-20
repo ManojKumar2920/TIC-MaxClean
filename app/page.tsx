@@ -21,15 +21,13 @@ import insta from "@/assets/insta.png";
 import git from "@/assets/git.png";
 import star from "@/assets/star.png";
 import dots from "@/assets/dots.png";
-// // import maxcleanVideo from "../assets/Maxclean.webm";
-// import { useState } from "react";
 import Mobilenav from "../components/MobileNavbar";
-// import Footer from "./Footer";
 import CountUp from "react-countup";
 import Link from"next/link"
 
 import { useInView } from "react-intersection-observer";
 import Faq from "@/components/Faq";
+
 export default function Home() {
   return (
     <div className="w-full overflow-hidden flex flex-col items-center justify-center">
@@ -42,7 +40,6 @@ export default function Home() {
       <Numbers />
       <Faq />
       <Footer />
-      {/* <Footer /> */}
     </div>
   );
 };
@@ -367,41 +364,7 @@ const Numbers = () => {
   return (
     <footer className=" text-white  w-full pt-8">
       {/* QR Code and Download Section */}
-      <div
-        className="text-center relative      py-32  bg-[#D70006]"
-        style={{
-          position: "relative",
-          zIndex: 1,
-        }}
-      >
-        <div
-          className="absolute inset-0"
-          style={{
-            backgroundImage: `url(${dots.src})`,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-            opacity: 0.5, // Adjust this value for desired opacity
-            zIndex: -1,
-          }}
-        />
-        {/* <img src={dots} alt="Dots" className="w-full   " /> */}
-        <div className="flex justify-center mb-4">
-          <img src={qr.src} alt="QR Code" className="w-36 rounded-lg h-36" />
-        </div>
-        <h2 className="md:text-[90px] md:whitespace-nowrap  whitespace-nowrap font-normal mb-4 text-4xl md:leading-[90px]">
-          Download today, <br /> use as needed!
-        </h2>
-        <div className="flex mt-10 justify-center md:px-0 px-6 flex-col md:flex-row gap-4">
-          <button className="bg-black  h-18 whitespace-nowrap md:text-[32px] font-normal justify-center text-white px-6 py-2 rounded-[16px] flex items-center">
-            <img src={app.src} alt="App Store" className="md:h-8 mr-2 h-10" />
-            App Store
-          </button>
-          <button className="bg-black   h-18 whitespace-nowrap md:text-[32px] font-normal justify-center text-white px-6 py-2 rounded-[16px] flex items-center">
-            <img src={goo.src} alt="Google Play" className="md:h-6 h-10 mr-2" />
-            Google Play
-          </button>
-        </div>
-      </div>
+
 
       {/* Footer Bottom Section */}
       <div className="bg-black flex flex-col  md:gap-8 gap-10 item-start md:items-center  md:px-16  px-4     pb-10 pt-16">

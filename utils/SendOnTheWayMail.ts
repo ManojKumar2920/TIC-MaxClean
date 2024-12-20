@@ -13,7 +13,7 @@ export const sendOntheWayMail = async (
     service: "gmail",
     auth: {
       user: process.env.NODE_MAILER_ID,
-      pass: process.env.NODE_MAILER_SECRET, // Use environment variables for production
+      pass: process.env.NODE_MAILER_SECRET,
     },
   });
 
@@ -100,7 +100,7 @@ export const sendOntheWayMail = async (
   <div class="email-container">
     <!-- Header -->
     <div class="header">
-      <img src="/public/logo.png" alt="MaxClean" />
+      <img src="https://www.themaxclean.com/img/logo.png" alt="MaxClean" />
       <h1>Your Order is On the Way</h1>
     </div>
 
