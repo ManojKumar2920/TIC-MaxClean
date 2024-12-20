@@ -11,7 +11,7 @@ export async function GET(req: NextRequest) {
   try {
     await connectDB();
     
-    const cookieStore = cookies();
+    const cookieStore = await cookies();
     const refreshTokenCookie = cookieStore.get("refreshToken");
     const googleTokenCookie = cookieStore.get("googleToken");
     
