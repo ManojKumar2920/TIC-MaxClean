@@ -89,20 +89,31 @@ export async function GET(req: Request) {
     );
     const response = NextResponse.redirect(new URL("/", req.url));
 
-    // Set JWT token and refresh token as cookies
-    response.cookies.set("googleToken", token, {
+    // // Set JWT token and refresh token as cookies
+    // response.cookies.set("googleToken", token, {
+    //   httpOnly: true,
+    //   secure: process.env.NODE_ENV === "production", // Use secure cookies in production
+    //   path: "/",
+    // });
+
+    (await cookies()).set({
+      name: "googleToken",
+      value: token,
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production", // Use secure cookies in production
+      secure: process.env.NODE_ENV === "production",
       path: "/",
+      maxAge: 30 * 24 * 60 * 60, // 30 days
     });
 
     // Check if refreshToken is available before setting the cookie
     if (refreshToken) {
-      response.cookies.set("refreshToken", refreshToken, {
+      (await cookies()).set({
+        name: "refreshToken",
+        value: refreshToken,
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production", // Secure cookie in production
+        secure: process.env.NODE_ENV === "production",
         path: "/",
-        maxAge: 30 * 24 * 60 * 60, // Refresh token expires in 30 days
+        maxAge: 30 * 24 * 60 * 60, // 30 days
       });
     } else {
       console.error("No refresh token received from Google.");

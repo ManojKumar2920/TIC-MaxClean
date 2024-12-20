@@ -15,7 +15,6 @@ const SignupPage = () => {
     lastName: "",
     phoneNumber: "",
     email: "",
-    password: "",
     emailOtp: ""
   });
   const [error, setError] = useState<string | null>(null);
@@ -37,10 +36,10 @@ const SignupPage = () => {
     // If OTP is not sent, send OTP first
     if (!isOtpSent) {
       try {
-        const { firstName, lastName, email, password, phoneNumber } = formData;
+        const { firstName, lastName, email, phoneNumber } = formData;
   
         // Validate that all required fields are filled out
-        if (!firstName || !lastName || !email || !password || !phoneNumber) {
+        if (!firstName || !lastName || !email || !phoneNumber) {
           setError("Please fill in all fields");
           toast.error("Please fill in all fields");
           return;
@@ -54,7 +53,6 @@ const SignupPage = () => {
             firstName,
             lastName,
             email,
-            password,
             phoneNumber
           })
         });
@@ -204,15 +202,6 @@ const SignupPage = () => {
                 placeholder="Email Address"
                 name="email"
                 value={formData.email}
-                onChange={handleChange}
-                className="w-full mt-4 md:h-[55px] h-[45px] outline-gray-400 rounded-[10px] px-4 py-2"
-                required
-              />
-              <input
-                type="password"
-                placeholder="Create password"
-                name="password"
-                value={formData.password}
                 onChange={handleChange}
                 className="w-full mt-4 md:h-[55px] h-[45px] outline-gray-400 rounded-[10px] px-4 py-2"
                 required

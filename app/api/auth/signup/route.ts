@@ -1,5 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';  // Using NextRequest, NextResponse
-import { hash } from 'bcryptjs';
+import { NextRequest, NextResponse } from 'next/server'; 
 import connectDB from '@/lib/db';
 import User from '@/models/User';
 import OTP from '@/models/Otp';
@@ -15,8 +14,7 @@ export async function POST(req: NextRequest) {
     const { 
       firstName, 
       lastName, 
-      email, 
-      password, 
+      email,
       phoneNumber, 
       emailOtp 
     } = await req.json();  // Use req.json() to parse the request body
@@ -24,7 +22,7 @@ export async function POST(req: NextRequest) {
     // Step 1: Initial Signup Request (Send OTP)
     if (!emailOtp) {
       // Validate input fields
-      if (!firstName || !lastName || !email || !password || !phoneNumber) {
+      if (!firstName || !lastName || !email || !phoneNumber) {
         return NextResponse.json({ message: 'Missing required fields' }, { status: 422 });
       }
 
@@ -49,6 +47,7 @@ export async function POST(req: NextRequest) {
       });
       await newOTP.save();
 
+    
       // Send OTP via email (you can add phone OTP sending if needed)
       await sendEmailOtp(email, otp);
 
@@ -77,16 +76,12 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ message: 'OTP has expired' }, { status: 400 });
       }
 
-      // Hash the password
-      const hashedPassword = await hash(password, 10);
-
       // Create new user
       const newUser = new User({
         firstName,
         lastName,
         email,
         phoneNumber,
-        password: hashedPassword,
       });
 
       await newUser.save();

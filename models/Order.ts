@@ -14,6 +14,7 @@ interface IOrder extends Document {
   timeSlot: string;
   notes: string;
   paymentStatus: string;
+  status: string;
   razorpayOrderId: string;
   razorpayPaymentId:string;
   createdAt: Date;
@@ -101,7 +102,13 @@ const orderSchema = new Schema<IOrder>(
     paymentStatus: {
       type: String,
       required: true,
-      enum: ["Pending", "Success", "Cancelled", "Failed"],
+      enum: ["Pending", "Success", "Cancelled", "Failed", "Refunded"],
+      default: "Pending",
+    },
+    status: {
+      type: String,
+      required: true,
+      enum: ["Pending", "Accepted", "Rejected", "OnTheWay", "Completed"],
       default: "Pending",
     },
     razorpayOrderId: { type: String }, // Add Razorpay order ID field

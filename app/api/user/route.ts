@@ -9,27 +9,16 @@ const REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET as string;
 
 export async function GET(req: NextRequest) {
   try {
-    // Logging for debugging
-    console.log('User Details Route: Starting request');
-
     // Connect to the database
     await connectDB();
-    console.log('User Details Route: Database connected');
+    
+    // Retrieve cookies
+    const cookieStore = await cookies();
+    const refreshTokenCookie = cookieStore.get("refreshToken");
+    const googleTokenCookie = cookieStore.get("googleToken");
 
-    // Get all cookies
-    const cookieStore = cookies();
-    const refreshTokenCookie = (await cookieStore).get("refreshToken");
-    const googleTokenCookie = (await cookieStore).get("googleToken");
-    const jwtTokenCookie = (await cookieStore).get("jwtToken");
-
-    console.log('Cookies found:', {
-      refreshToken: !!refreshTokenCookie,
-      googleToken: !!googleTokenCookie,
-    });
-
-    // Check if any authentication token exists
-    if (!refreshTokenCookie && !googleTokenCookie && !jwtTokenCookie) {
-      console.warn('User Details Route: No authentication token found');
+    // Check for authentication tokens in cookies
+    if (!refreshTokenCookie && !googleTokenCookie) {
       return NextResponse.json(
         { message: "Unauthorized: No authentication token found." },
         { status: 401 }
@@ -37,96 +26,72 @@ export async function GET(req: NextRequest) {
     }
 
     let user = null;
-    let authMethod = 'none';
+    let authMethod = "none";
 
     // Try Google Token first
     if (googleTokenCookie) {
       try {
-        const decoded = jwt.verify(googleTokenCookie.value, JWT_SECRET) as {
-          email: string;
-        };
-        console.log('Google token verified for email:', decoded.email);
+        const decoded = jwt.verify(googleTokenCookie.value, JWT_SECRET) as { email: string };
+        user = await User.findOne({ email: decoded.email, isGoogleUser: true })
+          .select('firstName lastName email phoneNumber role createdAt updatedAt');
 
-        user = await User.findOne({ 
-          email: decoded.email, 
-          isGoogleUser: true 
-        });
-
-        if (user) authMethod = 'google';
+        if (user) authMethod = "google";
       } catch (error) {
-        console.error('Google token verification error:', error);
+        console.error("Google token verification error:", error);
       }
     }
 
-    // Try Refresh Token (MongoDB auth)
+    // Try Refresh Token if Google Token fails
     if (!user && refreshTokenCookie) {
       try {
-        const decoded = jwt.verify(refreshTokenCookie.value, REFRESH_TOKEN_SECRET) as {
-          userId: string;
-        };
-        console.log('Refresh token verified for userId:', decoded.userId);
+        const decoded = jwt.verify(refreshTokenCookie.value, REFRESH_TOKEN_SECRET) as { userId: string };
+        user = await User.findOne({ email: decoded.userId })
+          .select('firstName lastName email phoneNumber role createdAt updatedAt');
 
-        user = await User.findById(decoded.userId);
-
-        if (user) authMethod = 'refreshToken';
+        if (user) authMethod = "refreshToken";
       } catch (error) {
-        console.error('Refresh token verification error:', error);
+        console.error("Refresh token verification error:", error);
       }
     }
 
-    // Try JWT Token
-    if (!user && jwtTokenCookie) {
-      try {
-        const decoded = jwt.verify(jwtTokenCookie.value, JWT_SECRET) as {
-          email: string;
-        };
-        console.log('JWT token verified for email:', decoded.email);
-
-        user = await User.findOne({ email: decoded.email });
-
-        if (user) authMethod = 'jwt';
-      } catch (error) {
-        console.error('JWT token verification error:', error);
-      }
-    }
-
-    // If no user found
+    // If no user found, return unauthorized
     if (!user) {
-      console.warn('User Details Route: No user found with any authentication method');
       return NextResponse.json(
-        { 
+        {
           message: "Unauthorized: Unable to authenticate user.",
           authAttempts: [
-            { method: 'Google Token', tried: !!googleTokenCookie },
-            { method: 'Refresh Token', tried: !!refreshTokenCookie },
-            { method: 'JWT Token', tried: !!jwtTokenCookie }
-          ]
+            { method: "Google Token", tried: !!googleTokenCookie },
+            { method: "Refresh Token", tried: !!refreshTokenCookie },
+          ],
         },
         { status: 401 }
       );
     }
 
-    console.log(`User found via ${authMethod} authentication`);
-
-    // Remove sensitive information
-    const { 
-      password, 
-      __v, 
-      ...userWithoutSensitive 
-    } = user.toObject();
-
-    return NextResponse.json({
-      ...userWithoutSensitive,
-      authMethod
-    }, { status: 200 });
-
-  } catch (error) {
-    console.error('User Details Route: Unexpected error', error);
+    // Return the user details along with the authentication method used
     return NextResponse.json(
-      { 
-        message: "Internal server error", 
+      {
+        user: {
+          firstName: user.firstName,
+          lastName: user.lastName,
+          email: user.email,
+          phoneNumber: user.phoneNumber,
+          role: user.role,
+          createdAt: user.createdAt,
+          updatedAt: user.updatedAt
+        },
+        authMethod
+      },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error("Unexpected error in user details route:", error);
+
+    return NextResponse.json(
+      {
+        message: "Internal server error",
         error: String(error),
-        stack: error instanceof Error ? error.stack : 'No stack trace' 
+        stack: error instanceof Error ? error.stack : "No stack trace",
       },
       { status: 500 }
     );

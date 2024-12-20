@@ -5,7 +5,6 @@ interface IUser extends Document {
   firstName: string;
   lastName: string;
   email: string;
-  password: string;
   phoneNumber: string;
   role: string;  // Add the role field here
   createdAt: Date;
@@ -21,9 +20,7 @@ const userSchema = new Schema<IUser>(
     },
     lastName: {
       type: String,
-      required: function () {
-        return this.password !== undefined; // Required only if password exists
-      },
+      required: false
     },
     email: {
       type: String,
@@ -36,11 +33,6 @@ const userSchema = new Schema<IUser>(
         },
         message: "Please enter a valid email address",
       },
-    },
-    password: {
-      type: String,
-      required: false,
-      minlength: [6, "Password must be at least 6 characters"],
     },
     phoneNumber: {
       type: String,

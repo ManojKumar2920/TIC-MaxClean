@@ -168,9 +168,9 @@ const Booking = () => {
         }
         const data = await response.json();
         setUserDetails({
-          name: data.firstName + " " + (data.lastName || ""),
-          email: data.email,
-          phoneNumber: data.phoneNumber || "",
+          name: data.user.firstName + " " + (data.user.lastName || ""),
+          email: data.user.email,
+          phoneNumber: data.user.phoneNumber || "",
         });
       } catch (error) {
         console.log(error);
