@@ -9,107 +9,69 @@ const REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET as string;
 
 export async function GET(req: NextRequest) {
   try {
+    // Connect to the database
     await connectDB();
     
+    // Retrieve cookies
     const cookieStore = await cookies();
     const refreshTokenCookie = cookieStore.get("refreshToken");
     const googleTokenCookie = cookieStore.get("googleToken");
-    
-    // Add debugging response headers in development
-    const debug = {
-      hasRefreshToken: !!refreshTokenCookie,
-      hasGoogleToken: !!googleTokenCookie,
-      tokenContents: {
-        refreshToken: refreshTokenCookie?.value ? 'present' : 'missing',
-        googleToken: googleTokenCookie?.value ? 'present' : 'missing'
-      }
-    };
 
-    // Enhanced error handling for missing tokens
+    // Check for authentication tokens in cookies
     if (!refreshTokenCookie && !googleTokenCookie) {
       return NextResponse.json(
-        {
-          message: "Authentication required",
-          details: "No valid authentication tokens found in cookies",
-          debug: process.env.NODE_ENV === 'development' ? debug : undefined
-        },
-        { 
-          status: 401,
-          headers: {
-            'WWW-Authenticate': 'Bearer realm="User Authentication"'
-          }
-        }
+        { message: "Unauthorized: No authentication token found." },
+        { status: 401 }
       );
     }
 
     let user = null;
     let authMethod = "none";
-    let tokenErrors = [];
 
-    // Google authentication attempt
-    if (googleTokenCookie?.value) {
+    // Try Google Token first
+    if (googleTokenCookie) {
       try {
         const decoded = jwt.verify(googleTokenCookie.value, JWT_SECRET) as { email: string };
-        user = await User.findOne({ 
-          email: decoded.email, 
-          isGoogleUser: true,
-          isActive: true // Add additional security checks
-        }).select('-password');
-        
+        user = await User.findOne({ email: decoded.email, isGoogleUser: true })
+          .select('firstName lastName email phoneNumber role createdAt updatedAt');
+
         if (user) authMethod = "google";
       } catch (error) {
-        tokenErrors.push({
-          type: 'google',
-          error: error instanceof Error ? error.message : 'Unknown error'
-        });
+        console.error("Google token verification error:", error);
       }
     }
 
-    // Refresh token attempt
-    if (!user && refreshTokenCookie?.value) {
+    // Try Refresh Token if Google Token fails
+    if (!user && refreshTokenCookie) {
       try {
         const decoded = jwt.verify(refreshTokenCookie.value, REFRESH_TOKEN_SECRET) as { userId: string };
-        user = await User.findOne({ 
-          _id: decoded.userId,
-          isActive: true // Add additional security checks
-        }).select('-password');
-        
+        user = await User.findOne({ email: decoded.userId })
+          .select('firstName lastName email phoneNumber role createdAt updatedAt');
+
         if (user) authMethod = "refreshToken";
       } catch (error) {
-        tokenErrors.push({
-          type: 'refresh',
-          error: error instanceof Error ? error.message : 'Unknown error'
-        });
+        console.error("Refresh token verification error:", error);
       }
     }
 
-    // Handle authentication failure
+    // If no user found, return unauthorized
     if (!user) {
       return NextResponse.json(
         {
-          message: "Authentication failed",
-          details: "Unable to verify user credentials",
+          message: "Unauthorized: Unable to authenticate user.",
           authAttempts: [
-            { method: "Google", status: googleTokenCookie ? 'failed' : 'not_present' },
-            { method: "RefreshToken", status: refreshTokenCookie ? 'failed' : 'not_present' }
+            { method: "Google Token", tried: !!googleTokenCookie },
+            { method: "Refresh Token", tried: !!refreshTokenCookie },
           ],
-          errors: process.env.NODE_ENV === 'development' ? tokenErrors : undefined,
-          debug: process.env.NODE_ENV === 'development' ? debug : undefined
         },
-        { 
-          status: 401,
-          headers: {
-            'WWW-Authenticate': 'Bearer error="invalid_token"'
-          }
-        }
+        { status: 401 }
       );
     }
 
-    // Success response with user data
-    const response = NextResponse.json(
+    // Return the user details along with the authentication method used
+    return NextResponse.json(
       {
         user: {
-          id: user._id,
           firstName: user.firstName,
           lastName: user.lastName,
           email: user.email,
@@ -118,31 +80,18 @@ export async function GET(req: NextRequest) {
           createdAt: user.createdAt,
           updatedAt: user.updatedAt
         },
-        authMethod,
-        debug: process.env.NODE_ENV === 'development' ? debug : undefined
+        authMethod
       },
       { status: 200 }
     );
-
-    // Add security headers
-    response.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate');
-    response.headers.set('Pragma', 'no-cache');
-    
-    return response;
-
   } catch (error) {
-    console.error("Authentication error:", error);
-    
+    console.error("Unexpected error in user details route:", error);
+
     return NextResponse.json(
       {
-        message: "Internal server error during authentication",
-        error: process.env.NODE_ENV === 'development' 
-          ? String(error)
-          : 'An unexpected error occurred',
-        debug: process.env.NODE_ENV === 'development' ? {
-          errorName: error instanceof Error ? error.name : 'Unknown',
-          errorStack: error instanceof Error ? error.stack : undefined
-        } : undefined
+        message: "Internal server error",
+        error: String(error),
+        stack: error instanceof Error ? error.stack : "No stack trace",
       },
       { status: 500 }
     );
