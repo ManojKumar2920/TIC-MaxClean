@@ -4,22 +4,12 @@ import Order from "@/models/Order";
 import Razorpay from "razorpay";
 import crypto from "crypto";
 import { sendOrderMail } from "@/utils/SendOrderMail";
-import { Document } from 'mongoose';
 import { sendOrderSMS } from "@/utils/SendOrderSMS";
+import { Document } from 'mongoose';
 
-// Define an interface for the Order document
-interface IOrder extends Document {
-  name: string;
-  email: string;
-  service: string;
-  timeSlot: string;
-  price: number;
-  date: string;
-  razorpayOrderId?: string;
-  razorpayPaymentId?: string;
-  status?: string;
-  paymentStatus?: string;
-}
+// Payment statuses from the Order model
+type PaymentStatus = "Pending" | "Success" | "Cancelled" | "Failed" | "Refunded";
+type OrderStatus = "Pending" | "Accepted" | "Rejected" | "OnTheWay" | "Completed";
 
 const RAZORPAY_KEY_SECRET = process.env.RAZORPAY_KEY_SECRET as string;
 
@@ -36,7 +26,7 @@ export async function POST(req: Request) {
       razorpay_order_id, 
       razorpay_payment_id, 
       razorpay_signature,
-      timeSlot // Add timeSlot to the destructured object
+      timeSlot 
     } = await req.json();
 
     // Validate required fields
@@ -60,8 +50,8 @@ export async function POST(req: Request) {
       );
     }
 
-    // Find the existing order with proper typing
-    const order = await Order.findOne({ timeSlot }) as IOrder | null;
+    // Find the existing order
+    const order = await Order.findOne({ timeSlot });
 
     if (!order) {
       return NextResponse.json(
@@ -73,34 +63,41 @@ export async function POST(req: Request) {
     // Fetch payment details from Razorpay
     const payment = await razorpay.payments.fetch(razorpay_payment_id);
 
-    // Determine order status
-    let orderStatus: string;
+    // Map Razorpay payment status to our PaymentStatus type
+    let paymentStatus: PaymentStatus;
     switch (payment.status) {
       case "captured":
-        orderStatus = "Success";
+        paymentStatus = "Success";
         break;
       case "failed":
-      case "refunded":
-        orderStatus = "Failed";
+        paymentStatus = "Failed";
         break;
-      case "authorized":
+      case "refunded":
+        paymentStatus = "Refunded";
+        break;
       case "created":
-        orderStatus = "Pending";
+      case "authorized":
+        paymentStatus = "Pending";
         break;
       default:
-        orderStatus = "Cancelled";
+        paymentStatus = "Cancelled";
     }
 
     // Update order with payment details
     order.razorpayOrderId = razorpay_order_id;
     order.razorpayPaymentId = razorpay_payment_id;
-    order.status = orderStatus;
-    order.paymentStatus = orderStatus;
+    order.paymentStatus = paymentStatus;
+
+    // Only keep the order status as Pending if payment is successful
+    // Otherwise, set it to Rejected
+    if (paymentStatus !== "Success") {
+      order.status = "Rejected";
+    }
 
     await order.save();
 
-    // Send confirmation email for successful payments
-    if (orderStatus === "Success") {
+    // Send confirmation email and SMS only for successful payments
+    if (paymentStatus === "Success") {
       await sendOrderMail(
         order.name,
         order.email,
@@ -118,15 +115,13 @@ export async function POST(req: Request) {
         order.date,
         order.timeSlot,
         order.razorpayOrderId
-      )
+      );
     }
-
-
 
     return NextResponse.json(
       { 
         message: "Payment verified and order updated successfully.",
-        status: orderStatus
+        status: paymentStatus
       },
       { status: 200 }
     );
