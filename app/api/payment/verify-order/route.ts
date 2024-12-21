@@ -5,6 +5,7 @@ import Razorpay from "razorpay";
 import crypto from "crypto";
 import { sendOrderMail } from "@/utils/SendOrderMail";
 import { Document } from 'mongoose';
+import { sendOrderSMS } from "@/utils/SendOrderSMS";
 
 // Define an interface for the Order document
 interface IOrder extends Document {
@@ -109,7 +110,18 @@ export async function POST(req: Request) {
         order.timeSlot,
         order.razorpayOrderId
       );
+
+      await sendOrderSMS(
+        order.name,
+        order.service,
+        order.price,
+        order.date,
+        order.timeSlot,
+        order.razorpayOrderId
+      )
     }
+
+
 
     return NextResponse.json(
       { 

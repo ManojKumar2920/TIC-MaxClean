@@ -7,6 +7,7 @@ import User from "@/models/User";
 import { sendAcceptMail } from "@/utils/SendAcceptMail";
 import { sendRejectMail } from "@/utils/SendRejectMail";
 import { sendOntheWayMail } from "@/utils/SendOnTheWayMail";
+import { sendOrderMail } from "@/utils/SendOrderMail";
 
 const REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET as string;
 
@@ -102,12 +103,10 @@ export async function POST(req: Request) {
     }
 
     const servicePrices: Record<string, number> = {
-      "Car foam wash": 649,
-      "Bike foam wash": 449,
+      "Car foam wash": 679,
       "Car + Bike combo": 899,
-      "Bi Weekly": 1099,
-      "Weekly": 2099,
-      "Battery jump start": 349,
+      "Bi Weekly": 1199,
+      "Weekly": 2199,
     };
 
     const price = servicePrices[service];

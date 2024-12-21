@@ -19,7 +19,7 @@ const Footer = () => {
               CALL US ANYTIME
             </h3>
             <p className="text-gray-400 text-lg font-medium  text-left">
-              +91-8179004144
+            +91-8179987444
             </p>
             <h3 className="text-[24px] font-bold text-[#D70006] text-left mt-4">
               VISIT OUR LOCATION
@@ -34,12 +34,9 @@ const Footer = () => {
                 <h1 className=" cursor-pointer">Privacy Policy</h1>
                 <h1 className=" cursor-pointer">Terms of Service</h1>
               </div>
-              <div className=" flex  flex-col items-start gap-2">
-                <h1 className=" cursor-pointer">Shop Owners</h1>
-                <h1 className=" cursor-pointer">Licences</h1>
-              </div>
+              
               <div className="  flex flex-col  gap-2 items-start">
-                <h1 className=" cursor-pointer">Changelog</h1>
+                {/* <h1 className=" cursor-pointer">Changelog</h1> */}
                 <h1 className=" cursor-pointer">Schedule Wash</h1>
               </div>
             </div>

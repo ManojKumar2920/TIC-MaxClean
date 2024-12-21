@@ -167,22 +167,22 @@ export async function sendEmailOtp(email: string, otp: string) {
   await transporter.sendMail(mailOptions);
 }
 
-export async function sendPhoneOtp(phoneNumber: string, otp: string) {
-  const apiKey = process.env.TWOFACTOR_API_KEY; // Replace with your 2Factor API Key
+// export async function sendPhoneOtp(phoneNumber: string, otp: string) {
+//   const apiKey = process.env.TWOFACTOR_API_KEY; // Replace with your 2Factor API Key
 
-  // API endpoint for sending OTP
-  const url = `https://2factor.in/API/V1/${apiKey}/SMS/${phoneNumber}/${otp}/OTP_MESSAGE`;
+//   // API endpoint for sending OTP
+//   const url = `https://2factor.in/API/V1/${apiKey}/SMS/${phoneNumber}/${otp}/OTP_MESSAGE`;
 
-  try {
-    // Send OTP using 2Factor API
-    const response = await axios.get(url);
+//   try {
+//     // Send OTP using 2Factor API
+//     const response = await axios.get(url);
 
-    if (response.data.Status === "Success") {
-      console.log("Phone OTP sent successfully");
-    } else {
-      console.log("Failed to send OTP:", response.data);
-    }
-  } catch (error) {
-    console.error("Error sending OTP:", error);
-  }
-}
+//     if (response.data.Status === "Success") {
+//       console.log("Phone OTP sent successfully");
+//     } else {
+//       console.log("Failed to send OTP:", response.data);
+//     }
+//   } catch (error) {
+//     console.error("Error sending OTP:", error);
+//   }
+// }

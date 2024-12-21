@@ -82,12 +82,10 @@ type AvailableSlots = {
 
 const Booking = () => {
   const servicePrices: { [key: string]: string } = {
-    "Car foam wash": "649",
-    "Bike foam wash": "449",
+    "Car foam wash": "679",
     "Car + Bike combo": "899",
-    "Bi Weekly": "1099",
-    Weekly: "2099",
-    "Battery jump start": "349",
+    "Bi Weekly": "1199",
+    "Weekly": "2199",
   };
 
   const [selectedDate, setSelectedDate] = useState("");
@@ -199,19 +197,19 @@ const Booking = () => {
           timeSlot: orderData.timeSlot,
         }),
       });
-  
+
       const orderResult = await response.json();
-  
+
       if (!response.ok) {
         throw new Error(orderResult.message || "Failed to create order");
       }
-  
+
       console.log("Order result:", orderResult); // Debugging log
-  
+
       const { _id, orderId, key } = orderResult; // Extract MongoDB `_id` and Razorpay orderId
-  
+
       const razorpay = await loadRazorpay();
-  
+
       const options = {
         key,
         amount: parseInt(price) * 100,
@@ -232,9 +230,9 @@ const Booking = () => {
               timeSlot: selectedSlot,
             }),
           });
-  
+
           const verifyResult = await verifyResponse.json();
-  
+
           if (verifyResponse.ok) {
             toast.success("Payment successful!");
             resetForm();
@@ -261,18 +259,18 @@ const Booking = () => {
                 },
                 body: JSON.stringify({
                   timeSlot: orderData.timeSlot, // Send the timeSlot correctly
-                  date: orderData.date,         // Send the date correctly
+                  date: orderData.date, // Send the date correctly
                 }),
               });
 
-              console.log(orderData.timeSlot)
-        
+              console.log(orderData.timeSlot);
+
               const data = await response.json();
-        
+
               if (response.ok) {
                 console.log("Payment status updated to cancelled.");
                 toast.info("Payment was cancelled.");
-                resetForm()
+                resetForm();
               } else {
                 toast.error("Failed to update payment status.");
               }
@@ -282,17 +280,17 @@ const Booking = () => {
             }
           },
         },
-        
       };
-  
+
       const paymentObject = new razorpay(options);
       paymentObject.open();
     } catch (error) {
       console.error("Payment initiation error:", error);
-      setError(error instanceof Error ? error.message : "Payment initiation failed");
+      setError(
+        error instanceof Error ? error.message : "Payment initiation failed"
+      );
     }
   };
-  
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -359,162 +357,171 @@ const Booking = () => {
   };
 
   return (
-<div className="py-20 mt-10 w-full flex flex-col h-full items-center gap-14">
-  <h1 className="md:text-[60px] text-5xl text-center">
-    Book an appointment <span className="text-[#D70006]">now</span>
-  </h1>
-  <div className="w-full flex flex-col md:flex-row gap-6 justify-center">
-    <form
-      onSubmit={handleSubmit}
-      className="flex flex-col items-center gap-4 w-full md:w-1/2"
-    >
-      <div className="flex flex-col items-center md:flex-row gap-6 w-full">
-        <input
-          type="text"
-          value={userDetails.name}
-          onChange={(e) =>
-            setUserDetails({ ...userDetails, name: e.target.value })
-          }
-          className="outline-gray-500 rounded-[8px] bg-[#F7F8FA] px-4 py-4 w-[90%] md:w-[50%]"
-          placeholder="Name*"
-        />
-        <input
-          type="email"
-          value={userDetails.email}
-          onChange={(e) =>
-            setUserDetails({ ...userDetails, email: e.target.value })
-          }
-          className="outline-gray-500 rounded-[8px] bg-[#F7F8FA] px-4 py-4 w-[90%] md:w-[50%]"
-          placeholder="Email*"
-        />
-      </div>
-      <div className="flex flex-col items-center md:flex-row gap-6 w-full">
-        <input
-          type="text"
-          value={userDetails.phoneNumber}
-          onChange={(e) =>
-            setUserDetails({ ...userDetails, phoneNumber: e.target.value })
-          }
-          className="outline-gray-500 rounded-[8px] bg-[#F7F8FA] px-4 py-4 w-[90%] md:w-[50%]"
-          placeholder="Mobile Number*"
-        />
-        <select
-          value={selectedService}
-          onChange={(e) => handleServiceChange(e.target.value)}
-          className="block outline-gray-500 rounded-[8px] bg-[#F7F8FA] px-4 py-4 w-[90%] md:w-[50%]"
+    <div className="py-20 mt-10 w-full flex flex-col h-full items-center gap-14">
+      <h1 className="md:text-[60px] text-5xl text-center">
+        Book an appointment <span className="text-[#D70006]">now</span>
+      </h1>
+      <div className="w-full flex flex-col md:flex-row gap-6 justify-center">
+        <form
+          onSubmit={handleSubmit}
+          className="flex flex-col items-center gap-4 w-full md:w-1/2"
         >
-          <option value="" disabled>
-            Select a Service*
-          </option>
-          {Object.keys(servicePrices).map((service) => (
-            <option key={service} value={service}>
-              {service}
+          <div className="flex flex-col items-center md:flex-row gap-6 w-full">
+            <input
+              type="text"
+              value={userDetails.name}
+              onChange={(e) =>
+                setUserDetails({ ...userDetails, name: e.target.value })
+              }
+              className="outline-gray-500 rounded-[8px] bg-[#F7F8FA] px-4 py-4 w-[90%] md:w-[50%]"
+              placeholder="Name*"
+            />
+            <input
+              type="email"
+              value={userDetails.email}
+              onChange={(e) =>
+                setUserDetails({ ...userDetails, email: e.target.value })
+              }
+              className="outline-gray-500 rounded-[8px] bg-[#F7F8FA] px-4 py-4 w-[90%] md:w-[50%]"
+              placeholder="Email*"
+            />
+          </div>
+          <div className="flex flex-col items-center md:flex-row gap-6 w-full">
+            <input
+              type="text"
+              value={userDetails.phoneNumber}
+              onChange={(e) =>
+                setUserDetails({ ...userDetails, phoneNumber: e.target.value })
+              }
+              className="outline-gray-500 rounded-[8px] bg-[#F7F8FA] px-4 py-4 w-[90%] md:w-[50%]"
+              placeholder="Mobile Number*"
+            />
+            <select
+              value={selectedService}
+              onChange={(e) => handleServiceChange(e.target.value)}
+              className="block outline-gray-500 rounded-[8px] bg-[#F7F8FA] px-4 py-4 w-[90%] md:w-[50%]"
+            >
+              <option value="" disabled>
+                Select a Service*
+              </option>
+              {Object.keys(servicePrices).map((service) => (
+                <option key={service} value={service}>
+                  {service}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="flex flex-col items-center md:flex-row gap-6 w-full">
+            <input
+              type="text"
+              value={price}
+              readOnly
+              className="outline-gray-500 rounded-[8px] bg-[#F7F8FA] px-4 py-4 w-[90%] md:w-[50%] cursor-not-allowed"
+              placeholder="Price*"
+            />
+            <input
+              type="text"
+              value={pincode}
+              onChange={(e) => setPincode(e.target.value)}
+              className="outline-gray-500 rounded-[8px] bg-[#F7F8FA] px-4 py-4 w-[90%] md:w-[50%]"
+              placeholder="Pincode*"
+            />
+          </div>
+          <select
+            id="timeSlot"
+            className="block bg-[#F7F8FA] px-4 py-4 w-[90%] md:w-full outline-gray-500 rounded-[8px]"
+            value={selectedSlot ? `${selectedDate}|${selectedSlot}` : ""}
+            onChange={(e) => {
+              if (e.target.value) {
+                const [date, slot] = e.target.value.split("|");
+                setSelectedDate(date);
+                setSelectedSlot(slot);
+              } else {
+                setSelectedDate("");
+                setSelectedSlot("");
+              }
+            }}
+          >
+            <option value="" disabled>
+              Choose a time slot
             </option>
-          ))}
-        </select>
-      </div>
-      <div className="flex flex-col items-center md:flex-row gap-6 w-full">
-        <input
-          type="text"
-          value={price}
-          readOnly
-          className="outline-gray-500 rounded-[8px] bg-[#F7F8FA] px-4 py-4 w-[90%] md:w-[50%] cursor-not-allowed"
-          placeholder="Price*"
-        />
-        <input
-          type="text"
-          value={pincode}
-          onChange={(e) => setPincode(e.target.value)}
-          className="outline-gray-500 rounded-[8px] bg-[#F7F8FA] px-4 py-4 w-[90%] md:w-[50%]"
-          placeholder="Pincode*"
-        />
-      </div>
-      <select
-        id="timeSlot"
-        className="block bg-[#F7F8FA] px-4 py-4 w-[90%] md:w-full outline-gray-500 rounded-[8px]"
-        value={selectedSlot ? `${selectedDate}|${selectedSlot}` : ""}
-        onChange={(e) => {
-          if (e.target.value) {
-            const [date, slot] = e.target.value.split("|");
-            setSelectedDate(date);
-            setSelectedSlot(slot);
-          } else {
-            setSelectedDate("");
-            setSelectedSlot("");
-          }
-        }}
-      >
-        <option value="" disabled>
-          Choose a time slot
-        </option>
-        {Object.keys(availableSlots).length === 0 ? (
-          <option disabled>No slots available</option>
-        ) : (
-          Object.keys(availableSlots).map(
-            (date) =>
-              availableSlots[date].length > 0 && (
-                <optgroup key={date} label={date}>
-                  {availableSlots[date].map((slot) => (
-                    <option key={`${date}|${slot}`} value={`${date}|${slot}`}>
-                      {slot}
-                    </option>
-                  ))}
-                </optgroup>
+            {Object.keys(availableSlots).length === 0 ? (
+              <option disabled>No slots available</option>
+            ) : (
+              Object.keys(availableSlots).map(
+                (date) =>
+                  availableSlots[date].length > 0 && (
+                    <optgroup key={date} label={date}>
+                      {availableSlots[date].map((slot) => (
+                        <option
+                          key={`${date}|${slot}`}
+                          value={`${date}|${slot}`}
+                        >
+                          {slot}
+                        </option>
+                      ))}
+                    </optgroup>
+                  )
               )
-          )
-        )}
-      </select>
+            )}
+          </select>
 
-      <input
-        type="text"
-        value={address}
-        onChange={(e) => setAddress(e.target.value)}
-        className="bg-[#F7F8FA] w-[90%] md:w-full px-4 py-4 outline-gray-500 rounded-[8px]"
-        placeholder="Address*"
-      />
-      <input
-        type="text"
-        value={landmark}
-        onChange={(e) => setLandmark(e.target.value)}
-        className="bg-[#F7F8FA] w-[90%] md:w-full px-4 py-4 outline-gray-500 rounded-[8px]"
-        placeholder="Landmark*"
-      />
-      <textarea
-        value={notes}
-        onChange={(e) => setNotes(e.target.value)}
-        className="bg-[#F7F8FA] mt-2 w-[90%] md:w-full px-4 py-4 h-60 outline-gray-500 rounded-[8px]"
-        placeholder="Additional Notes (optional)"
-      ></textarea>
+          <input
+            type="text"
+            value={address}
+            onChange={(e) => setAddress(e.target.value)}
+            className="bg-[#F7F8FA] w-[90%] md:w-full px-4 py-4 outline-gray-500 rounded-[8px]"
+            placeholder="Address*"
+          />
+          <input
+            type="text"
+            value={landmark}
+            onChange={(e) => setLandmark(e.target.value)}
+            className="bg-[#F7F8FA] w-[90%] md:w-full px-4 py-4 outline-gray-500 rounded-[8px]"
+            placeholder="Landmark*"
+          />
+          <textarea
+            value={notes}
+            onChange={(e) => setNotes(e.target.value)}
+            className="bg-[#F7F8FA] mt-2 w-[90%] md:w-full px-4 py-4 h-60 outline-gray-500 rounded-[8px]"
+            placeholder="Additional Notes (optional)"
+          ></textarea>
 
-      {error && <div className="text-red-500">{error}</div>}
+          {error && <div className="text-red-500">{error}</div>}
 
-      <button
-        type="submit"
-        className="text-white text-xl w-[90%] md:w-full mt-2 bg-black whitespace-nowrap rounded-[8px] py-3"
-      >
-        Book Order
-      </button>
-    </form>
+          <button
+            type="submit"
+            className="text-white text-xl w-[90%] md:w-full mt-2 bg-black whitespace-nowrap rounded-[8px] py-3"
+          >
+            Book Order
+          </button>
+        </form>
 
-    {/* Sidebar */}
-    <div className="hidden md:flex flex-col gap-10 py-14 px-8 bg-[#D70006] text-white rounded-[20px] w-full md:w-1/3">
-      <div>
-        <h1 className="text-3xl mb-2">Address</h1>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-      </div>
-      <div>
-        <h1 className="text-3xl mb-2">Contact</h1>
-        <p>Phone: (144) 4891 8391</p>
-        <p>Email: example@gmail.com</p>
-      </div>
-      <div>
-        <h1 className="text-3xl mb-2">Open time</h1>
-        <p>Monday - Friday: 10:00 AM to 6:00 PM</p>
-        <p>Saturday & Sunday: 10:00 AM to 3:00 PM</p>
+        {/* Sidebar */}
+        <div className="hidden md:flex flex-col gap-10 py-14 px-8 bg-[#D70006] text-white rounded-[20px] w-full md:w-1/3">
+          <div>
+            <h1 className="text-3xl mb-2">Address</h1>
+            <p>Hyderabad, India</p>
+          </div>
+          <div>
+            <h1 className="text-3xl mb-2">Contact</h1>
+            <p>
+              Phone: <a href="tel:+91-8179987444">+91-8179987444 </a>
+            </p>
+            <p>
+              Email:{" "}
+              <a href="mailto:maxcleanbusiness@gmail.com">
+                maxcleanbusiness@gmail.com
+              </a>
+            </p>
+          </div>
+          <div>
+            <h1 className="text-3xl mb-2">Timings</h1>
+            <p>Monday - Friday: 10:00 AM to 6:00 PM</p>
+            <p>Saturday & Sunday: 10:00 AM to 3:00 PM</p>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-</div>
-
   );
 };

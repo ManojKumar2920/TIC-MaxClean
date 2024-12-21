@@ -29,7 +29,7 @@ const Navbar = () => {
 
 
   return (
-    <nav className="fixed md:block hidden top-4 !z-[200] w-[80%]  m-auto  rounded-[10px] bg-[#00000094]/20 bg-opacity-70 px-12 py-4 text-white shadow-lg backdrop-blur-lg">
+    <nav className="fixed md:block hidden top-4 !z-[200] w-[80%]  m-auto  rounded-[10px] bg-[#00000096]/20 bg-opacity-100 px-12 py-4 text-white shadow-lg backdrop-blur-lg">
       <div className="container mx-auto flex items-center justify-between gap-6 space-x-8 text-[16px] font-medium">
         <div className="inter flex items-center  justify-between gap-6">
           <Link href="/">
@@ -40,7 +40,7 @@ const Navbar = () => {
           <Link
             href="/about"
             className={`${
-              isActive("/about") ? "text-white" : "text-black"
+              isActive("/about") ? "text-red-600" : "text-white"
             } hover:text-[#E50914]`}
           >
             About
@@ -48,23 +48,15 @@ const Navbar = () => {
           <Link
             href="/review"
             className={`${
-              isActive("/review") ? "text-white" : "text-black"
+              isActive("/review") ? "text-red-600" : "text-white"
             } hover:text-[#E50914]`}
           >
             Reviews
           </Link>
           <Link
-            href="/connect"
-            className={`${
-              isActive("/connect") ? "text-white" : "text-black"
-            } hover:text-[#E50914]`}
-          >
-            Get App
-          </Link>
-          <Link
             href="/pricing"
             className={`${
-              isActive("/pricing") ? "text-white" : "text-black"
+              isActive("/pricing") ? "text-red-600" : "text-white"
             } hover:text-[#E50914]`}
           >
             Pricing
