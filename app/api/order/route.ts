@@ -45,6 +45,7 @@ async function verifyAuth(): Promise<VerifyAuthResult> {
     // Return user without sensitive fields
     return { 
       user: {
+        userId: user._id,
         firstName: user.firstName,
         lastName: user.lastName,
         email: user.email,
@@ -118,7 +119,7 @@ export async function POST(req: Request) {
     }
 
     const newOrder = await Order.create({
-      userId: authResult.user._id,
+      userId: authResult.user.userId,
       name,
       email,
       phoneNumber,
