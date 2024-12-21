@@ -13,24 +13,13 @@ export const sendOrderSMS = async (
 
   const smsContent = `
     Hello ${name},
-
-    Thank you for your order with MaxClean! Here are your order details:
-
-    Service: ${service}
-    Price: ₹${price}
-    Date: ${date}
-    Time Slot: ${timeSlot}
-    Order ID: ${razorpayOrderId}
-
-    If you have questions, contact us at maxcleanbusiness@gmail.com. Thank you for choosing MaxClean!
-
-    Team MaxClean
-    `.trim();
+    Thank you for your order with MaxClean!
+    Service: ${service}, Price: ₹${price}, Date: ${date}, Time Slot: ${timeSlot}, Order ID: ${razorpayOrderId}.
+    If you have questions, contact us at maxcleanbusiness@gmail.com. Team MaxClean!
+  `.trim();
 
   const phoneNumbers = ["9597028220"];
   const toField = phoneNumbers.join(",");
-
-  // Prepare the data for the SMS API
 
   const data = qs.stringify({
     module: "TRANS_SMS",
@@ -40,7 +29,6 @@ export const sendOrderSMS = async (
     message: smsContent,
   });
 
-  // Axios configuration
   const config: AxiosRequestConfig = {
     method: "post",
     maxBodyLength: Infinity,
@@ -52,8 +40,8 @@ export const sendOrderSMS = async (
   };
 
   try {
-    // Send the SMS
-    await axios(config);
+    const response = await axios(config);
+    console.log("API Response:", response.data);
     console.log("Order confirmation SMS sent successfully.");
   } catch (error) {
     console.error("Error sending SMS:", error);
