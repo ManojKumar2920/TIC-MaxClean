@@ -9,7 +9,6 @@ import { Document } from 'mongoose';
 
 // Payment statuses from the Order model
 type PaymentStatus = "Pending" | "Success" | "Cancelled" | "Failed" | "Refunded";
-type OrderStatus = "Pending" | "Accepted" | "Rejected" | "OnTheWay" | "Completed";
 
 const RAZORPAY_KEY_SECRET = process.env.RAZORPAY_KEY_SECRET as string;
 

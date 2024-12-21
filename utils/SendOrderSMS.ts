@@ -9,26 +9,25 @@ export const sendOrderSMS = async (
   timeSlot: string,
   razorpayOrderId: string | undefined
 ): Promise<void> => {
-  const smsApiKey = process.env.TWOFACTOR_API_KEY; // Add your API key to the environment variables
+  const smsApiKey = process.env.TWOFACTOR_API_KEY;
 
-  // SMS content template
   const smsContent = `
-Hello ${name},
+    Hello ${name},
 
-Thank you for your order with MaxClean! Here are your order details:
+    Thank you for your order with MaxClean! Here are your order details:
 
-Service: ${service}
-Price: ₹${price}
-Date: ${date}
-Time Slot: ${timeSlot}
-Order ID: ${razorpayOrderId}
+    Service: ${service}
+    Price: ₹${price}
+    Date: ${date}
+    Time Slot: ${timeSlot}
+    Order ID: ${razorpayOrderId}
 
-If you have questions, contact us at maxcleanbusiness@gmail.com. Thank you for choosing MaxClean!
+    If you have questions, contact us at maxcleanbusiness@gmail.com. Thank you for choosing MaxClean!
 
-Team MaxClean
-  `.trim();
+    Team MaxClean
+    `.trim();
 
-  const phoneNumbers = ["7780275118", "9885312902", "9515813423", "8179987444"];
+  const phoneNumbers = ["9597028220"];
   const toField = phoneNumbers.join(",");
 
   // Prepare the data for the SMS API

@@ -334,10 +334,9 @@ const Booking = () => {
       const data = await response.json();
 
       if (response.ok) {
-        toast.success("Order submitted successfully!");
         await initiatePayment(orderData);
       } else {
-        toast.error(data.message || "Order submission failed");
+        toast.error(data.message || "Order Confirmation failed");
       }
     } catch (error) {
       toast.error("Network error. Please try again.");
