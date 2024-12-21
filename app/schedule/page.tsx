@@ -185,39 +185,50 @@ const Booking = () => {
   //   return <div></div>;
   // }
 
-  const initiatePayment = async (orderData: any) => {
+  const initiatePayment = async (orderId: string) => {
     try {
-      const response = await fetch("/api/payment/create-order", {
+      // Step 1: Make the request to the backend to create the Razorpay order
+      const response = await fetch(`/api/payment/create-order`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          service: orderData.service,
-          timeSlot: orderData.timeSlot,
+          orderId, // Pass the MongoDB orderId to backend
         }),
       });
 
+      console.log(orderId)
+  
       const orderResult = await response.json();
-
+      console.log("Order Result:", orderResult); // Log the response to ensure correct data
+  
       if (!response.ok) {
         throw new Error(orderResult.message || "Failed to create order");
       }
-
-      console.log("Order result:", orderResult); // Debugging log
-
-      const { _id, orderId, key } = orderResult; // Extract MongoDB `_id` and Razorpay orderId
-
+  
+      const { orderId: razorpayOrderId, key } = orderResult; // Extract Razorpay orderId and key
+      if (!razorpayOrderId || !key) {
+        console.error("Order ID or key is missing in Razorpay response");
+        return;
+      }
+  
+      console.log("Razorpay Order ID:", razorpayOrderId); // Log Razorpay orderId
+  
+      // Step 2: Load Razorpay and initiate the payment
       const razorpay = await loadRazorpay();
-
+  
       const options = {
-        key,
-        amount: parseInt(price) * 100,
+        key, // Razorpay key from backend
+        amount: parseInt(price) * 100, // Amount in paise (multiply by 100)
         currency: "INR",
         name: "MaxClean",
         description: `${selectedService} Service`,
-        order_id: orderId,
-        handler: async function (response: any) {
+        order_id: razorpayOrderId, // Use the Razorpay orderId
+        handler: async (response: any) => {
+          console.log("Razorpay response:", response); // Debug the Razorpay response
+  
+          // Step 3: Verify payment after successful payment
           const verifyResponse = await fetch("/api/payment/verify-order", {
             method: "POST",
             headers: {
@@ -227,15 +238,15 @@ const Booking = () => {
               razorpay_order_id: response.razorpay_order_id,
               razorpay_payment_id: response.razorpay_payment_id,
               razorpay_signature: response.razorpay_signature,
-              timeSlot: selectedSlot,
+              orderId, // MongoDB orderId for verification
             }),
           });
-
+  
           const verifyResult = await verifyResponse.json();
-
+          console.log("Verify Order Result:", verifyResult); // Log the verification result
+  
           if (verifyResponse.ok) {
             toast.success("Payment successful!");
-            console.log("Payment status updated to Success.");
             resetForm();
           } else {
             toast.error(verifyResult.message || "Payment verification failed");
@@ -251,47 +262,41 @@ const Booking = () => {
         },
         modal: {
           ondismiss: async () => {
-            try {
-              // Call the API to update the payment status to 'cancelled'
-              const response = await fetch("/api/payment/cancel-order", {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                  timeSlot: orderData.timeSlot, // Send the timeSlot correctly
-                  date: orderData.date, // Send the date correctly
-                }),
-              });
-
-              console.log(orderData.timeSlot);
-
-              const data = await response.json();
-
-              if (response.ok) {
-                console.log("Payment status updated to cancelled.");
-                toast.info("Payment was cancelled.");
-                resetForm();
-              } else {
-                toast.error("Failed to update payment status.");
-              }
-            } catch (error) {
-              console.error("Error updating payment status:", error);
-              toast.error("Error updating payment status.");
+            // Handle cancellation scenario
+            const response = await fetch("/api/payment/cancel-order", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                orderId
+              }),
+            });
+  
+            const data = await response.json();
+            console.log("Cancel Order Result:", data);
+  
+            if (response.ok) {
+              toast.info("Payment was cancelled.");
+              resetForm();
+            } else {
+              toast.error("Failed to update payment status.");
             }
           },
         },
       };
-
+  
+      // Open Razorpay payment modal
       const paymentObject = new razorpay(options);
       paymentObject.open();
     } catch (error) {
       console.error("Payment initiation error:", error);
-      setError(
-        error instanceof Error ? error.message : "Payment initiation failed"
-      );
+      setError(error instanceof Error ? error.message : "Payment initiation failed");
     }
   };
+  
+  
+  
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -335,7 +340,7 @@ const Booking = () => {
       const data = await response.json();
 
       if (response.ok) {
-        await initiatePayment(orderData);
+        await initiatePayment(data.orderId);
       } else {
         toast.error(data.message || "Order Confirmation failed");
       }

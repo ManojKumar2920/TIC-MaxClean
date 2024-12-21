@@ -16,22 +16,32 @@ const razorpay = new Razorpay({
 
 export async function POST(req: Request) {
   try {
-    // Connect to the database
     await connectDB();
 
     // Parse the request body
-    const { service, timeSlot } = await req.json();
+    const { orderId } = await req.json();
 
-    // Validate required fields
-    if (!service || !timeSlot) {
+    // Validate the orderId
+    if (!orderId) {
       return NextResponse.json(
-        { message: "Service and time slot are required." },
+        { message: "orderId is required." },
         { status: 400 }
       );
     }
-  
 
-    // Calculate price based on service
+    // Step 1: Fetch the order from the database using the orderId
+    const order = await Order.findOne({ _id: orderId });
+
+    if (!order) {
+      return NextResponse.json(
+        { message: "Order not found." },
+        { status: 404 }
+      );
+    }
+
+    // Retrieve service and timeSlot from the fetched order
+    const { service, timeSlot } = order;
+
     const servicePrices: Record<string, number> = {
       "Car foam wash": 679,
       "Car + Bike combo": 899,
@@ -39,7 +49,7 @@ export async function POST(req: Request) {
       "Weekly": 2199,
     };
 
-
+    // Get the price for the service
     const price = servicePrices[service];
     if (!price) {
       return NextResponse.json(
@@ -48,24 +58,34 @@ export async function POST(req: Request) {
       );
     }
 
-    // Create an order in Razorpay
-    const order = await razorpay.orders.create({
-      amount: 1 * 100, // Razorpay accepts the amount in paise (1 INR = 100 paise)
+    // Step 2: Create the Razorpay order
+    const razorpayOrder = await razorpay.orders.create({
+      amount: 1 * 100, // Razorpay expects the amount in paise (1 INR = 100 paise)
       currency: "INR",
-      receipt: `order_${new Date().getTime()}`,
+      receipt: `receipt_order_${orderId}`,
+      payment_capture: true, // Auto-capture payments
       notes: {
         service,
         timeSlot,
       },
     });
-    
 
-    // Return the Razorpay order ID and the payment gateway key
+    order.razorpayOrderId = razorpayOrder.id;  // Assuming `razorpayOrderId` is a field in the Order model
+    await order.save(); 
+
+    if (!razorpayOrder || !razorpayOrder.id) {
+      return NextResponse.json(
+        { message: "Failed to create Razorpay order." },
+        { status: 500 }
+      );
+    }
+
+    // Step 3: Respond with the Razorpay order ID and the public key
     return NextResponse.json(
       {
         message: "Order created successfully.",
-        orderId: order.id,
-        key: RAZORPAY_KEY_ID,
+        orderId: razorpayOrder.id,
+        key: RAZORPAY_KEY_ID, // Razorpay public key
       },
       { status: 200 }
     );

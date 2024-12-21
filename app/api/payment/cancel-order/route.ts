@@ -7,18 +7,18 @@ export async function POST(req: Request) {
   try {
     await connectDB();
 
-    const {  timeSlot, date } = await req.json();
+    const { orderId } = await req.json();
 
     // Validate that all required fields are provided
-    if ( !timeSlot || !date) {
+    if ( !orderId) {
       return NextResponse.json(
-        { message: "Missing required fields: _id, timeSlot, or date." },
+        { message: "Missing required field :orderId" },
         { status: 400 }
       );
     }
 
     // Find the order using _id, timeSlot, and date
-    const order = await Order.findOne({timeSlot, date }).sort({ createdAt: -1 }); ;
+    const order = await Order.findOne({ _id: orderId});
 
     if (!order) {
       return NextResponse.json(

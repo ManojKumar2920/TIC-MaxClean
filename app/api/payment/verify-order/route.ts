@@ -5,15 +5,15 @@ import Razorpay from "razorpay";
 import crypto from "crypto";
 import { sendOrderMail } from "@/utils/SendOrderMail";
 import { sendOrderSMS } from "@/utils/SendOrderSMS";
-import { Document } from 'mongoose';
 
-// Payment statuses from the Order model
-type PaymentStatus = "Pending" | "Success" | "Cancelled" | "Failed" | "Refunded";
+const { RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET } = process.env ;
 
-const RAZORPAY_KEY_SECRET = process.env.RAZORPAY_KEY_SECRET as string;
+if (!RAZORPAY_KEY_ID || !RAZORPAY_KEY_SECRET) {
+  throw new Error("Missing Razorpay keys in environment variables");
+}
 
 const razorpay = new Razorpay({
-  key_id: process.env.RAZORPAY_KEY_ID as string,
+  key_id: RAZORPAY_KEY_ID,
   key_secret: RAZORPAY_KEY_SECRET,
 });
 
@@ -21,15 +21,10 @@ export async function POST(req: Request) {
   try {
     await connectDB();
 
-    const { 
-      razorpay_order_id, 
-      razorpay_payment_id, 
-      razorpay_signature,
-      timeSlot 
-    } = await req.json();
+    const { razorpay_order_id, razorpay_payment_id, razorpay_signature, orderId } =
+      await req.json();
 
-    // Validate required fields
-    if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature || !timeSlot) {
+    if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature || !orderId) {
       return NextResponse.json(
         { message: "Missing required payment details." },
         { status: 400 }
@@ -38,8 +33,8 @@ export async function POST(req: Request) {
 
     // Verify payment signature
     const generated_signature = crypto
-      .createHmac("sha256", RAZORPAY_KEY_SECRET)
-      .update(razorpay_order_id + "|" + razorpay_payment_id)
+      .createHmac("sha256", RAZORPAY_KEY_SECRET!)
+      .update(`${razorpay_order_id}|${razorpay_payment_id}`)
       .digest("hex");
 
     if (generated_signature !== razorpay_signature) {
@@ -49,8 +44,8 @@ export async function POST(req: Request) {
       );
     }
 
-    // Find the existing order
-    const order = await Order.findOne({ timeSlot });
+    // Retrieve order
+    const order = await Order.findOne({ razorpyOrderId : razorpay_order_id });
 
     if (!order) {
       return NextResponse.json(
@@ -62,40 +57,20 @@ export async function POST(req: Request) {
     // Fetch payment details from Razorpay
     const payment = await razorpay.payments.fetch(razorpay_payment_id);
 
-    // Map Razorpay payment status to our PaymentStatus type
-    let paymentStatus: PaymentStatus;
-    switch (payment.status) {
-      case "captured":
-        paymentStatus = "Success";
-        break;
-      case "failed":
-        paymentStatus = "Failed";
-        break;
-      case "refunded":
-        paymentStatus = "Refunded";
-        break;
-      case "created":
-      case "authorized":
-        paymentStatus = "Pending";
-        break;
-      default:
-        paymentStatus = "Cancelled";
+    let paymentStatus = "Pending";
+    if (payment.status === "captured") {
+      paymentStatus = "Success";
+    } else if (payment.status === "failed") {
+      paymentStatus = "Failed";
+    } else if (payment.status === "refunded") {
+      paymentStatus = "Refunded";
     }
 
-    // Update order with payment details
-    order.razorpayOrderId = razorpay_order_id;
-    order.razorpayPaymentId = razorpay_payment_id;
+    // Update the order status
     order.paymentStatus = paymentStatus;
+    order.razorpayPaymentId = razorpay_payment_id;
 
-    // Only keep the order status as Pending if payment is successful
-    // Otherwise, set it to Rejected
-    if (paymentStatus !== "Success") {
-      order.status = "Rejected";
-    }
-
-    await order.save();
-
-    // Send confirmation email and SMS only for successful payments
+    // If payment is successful, update the status to "Completed"
     if (paymentStatus === "Success") {
       await sendOrderMail(
         order.name,
@@ -116,12 +91,10 @@ export async function POST(req: Request) {
         order.razorpayOrderId
       );
     }
+    await order.save();
 
     return NextResponse.json(
-      { 
-        message: "Payment verified and order updated successfully.",
-        status: paymentStatus
-      },
+      { message: "Payment verified and order updated successfully.", status: paymentStatus },
       { status: 200 }
     );
   } catch (error) {

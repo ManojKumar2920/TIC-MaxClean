@@ -137,6 +137,7 @@ export async function POST(req: Request) {
       {
         message: "Order created successfully.",
         order: newOrder,
+        orderId: newOrder._id.toString(), 
       },
       { status: 201 }
     );
