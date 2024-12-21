@@ -191,7 +191,7 @@ export async function PATCH(req: Request) {
   try {
     await connectDB();
 
-    const { orderId, newStatus, UserMessage } = await req.json();
+    const { orderId, newStatus, message } = await req.json();
 
     // Validate required fields
     if (!orderId || !newStatus) {
@@ -244,7 +244,7 @@ export async function PATCH(req: Request) {
         await sendAcceptMail( order.name, order.email, order.service, order.price, order.date,order.timeSlot, order.razorpayOrderId,);
         break;
       case "Rejected":
-        await sendRejectMail( order.name, order.email, order.service, order.price, order.date,order.timeSlot, order.razorpayOrderId ,UserMessage);
+        await sendRejectMail( order.name, order.email, order.service, order.price, order.date,order.timeSlot, order.razorpayOrderId ,message);
         break;
       case "OnTheWay":
         await sendOntheWayMail( order.name, order.email, order.service, order.price, order.date,order.timeSlot, order.razorpayOrderId);

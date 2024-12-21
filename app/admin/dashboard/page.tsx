@@ -102,38 +102,70 @@ export default function Dashboard() {
 
   const [isFormModalOpen, setIsFormModalOpen] = useState(false);
 
-
   const [isOptionsModalOpen, setIsOptionsModalOpen] = useState(false);
 
-  const handleStatusChange = async (newStatus: string) => {
+  const [isRejectModalOpen, setIsRejectModalOpen] = useState(false);
+
+  const [userMessage, setUserMessage] = useState("");
+
+  const handleStatusChange = (newStatus: string) => {
     if (!selectedOrderId) {
       toast.error("No order selected. Please try again.");
-      console.error("No order selected.");
       return;
     }
 
+    // Open modal for rejection message if status is "Rejected"
+    if (newStatus === "Rejected") {
+      setIsRejectModalOpen(true);
+      return;
+    }
+
+    // Otherwise, update the status directly
+    updateOrderStatus({ orderId: selectedOrderId, newStatus });
+  };
+
+  const handleRejection = async () => {
+    if (!selectedOrderId) {
+      toast.error("No order selected. Please try again.");
+      return;
+    }
+
+    if (!userMessage.trim()) {
+      toast.error("Rejection message is required.");
+      return;
+    }
+
+    await updateOrderStatus({
+      orderId: selectedOrderId,
+      newStatus: "Rejected",
+      message: userMessage.trim(),
+    });
+
+    setIsRejectModalOpen(false);
+    setUserMessage(""); // Reset the input after submission
+  };
+
+  const updateOrderStatus = async (payload: object) => {
     try {
       const response = await fetch("/api/order", {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ orderId: selectedOrderId, newStatus }),
+        body: JSON.stringify(payload),
       });
 
       if (!response.ok) {
         const errorData = await response.json();
-        toast.error(`Error: ${errorData.message}`);
-        return;
+        throw new Error(errorData.message || "Failed to update order.");
       }
 
-      // Fetch updated data immediately after successful status change
+      // Refetch orders after successful update
       fetchOrders();
       toast.success("Order status updated successfully.");
       setIsOptionsModalOpen(false);
     } catch (error) {
       toast.error("An unexpected error occurred.");
-      console.error(error);
     }
   };
 
@@ -724,7 +756,7 @@ export default function Dashboard() {
         date: selectedDate,
         timeSlot: selectedSlot,
         notes: notes.trim(),
-        paymentStatus: "Success"
+        paymentStatus: "Success",
       };
 
       const response = await fetch("/api/order", {
@@ -760,9 +792,9 @@ export default function Dashboard() {
     setNotes("");
   };
 
-  const handleAddOrders = ()=>{
+  const handleAddOrders = () => {
     setIsFormModalOpen(true);
-  }
+  };
 
   return (
     <div className="flex min-h-screen">
@@ -783,13 +815,13 @@ export default function Dashboard() {
             <div className="w-5 h-5 rounded-full border-2 border-red-500" />
             <span>Dashboard</span>
           </Link>
-          <Link
+          {/* <Link
             href="#"
             className="flex items-center space-x-2 text-gray-400 p-3"
           >
             <div className="w-5 h-5" />
             <span>Orders</span>
-          </Link>
+          </Link> */}
           <div className="   absolute bottom-0">
             <button
               onClick={handleSignout}
@@ -1314,6 +1346,7 @@ export default function Dashboard() {
                   Next &gt;
                 </button>
               </div>
+
               {isOptionsModalOpen && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
                   <Card
@@ -1346,144 +1379,205 @@ export default function Dashboard() {
                 </div>
               )}
             </div>
-            {isFormModalOpen && (
-              <div className=" bg-black  bg-opacity-50 w-full absolute left-0 top-0 flex justify-center items-center z-50">
+
+            {isRejectModalOpen && (
+              <div
+                className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
+                aria-hidden={!isRejectModalOpen}
+              >
                 <div
-                  ref={modalRef}
-                  className=" rounded-lg p-6 w-full"
+                  className="bg-white p-6 rounded-lg shadow-lg w-96"
+                  role="dialog"
+                  aria-labelledby="rejectModalTitle"
+                  aria-describedby="rejectModalDescription"
                 >
-                  <div className="  w-full flex flex-col md:flex-row gap-6 justify-center">
-                    <form
-                      onSubmit={handleSubmit}
-                      className=" bg-white p-5 rounded-xl flex flex-col items-center gap-4 w-full md:w-1/2"
+                  <h2
+                    id="rejectModalTitle"
+                    className="text-xl font-semibold mb-4 text-red-500"
+                  >
+                    Reject Order
+                  </h2>
+                  <textarea
+                    value={userMessage}
+                    onChange={(e) => setUserMessage(e.target.value)}
+                    placeholder="Enter a reason for rejection..."
+                    className="w-full p-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
+                    rows={4}
+                  />
+                  <div className="flex justify-end mt-4 space-x-2">
+                    <button
+                      onClick={() => {
+                        setIsRejectModalOpen(false);
+                        setUserMessage(""); // Reset the message when modal closes
+                      }}
+                      className="px-4 py-2 bg-gray-300 rounded-md hover:bg-gray-400"
                     >
-                      <h1 className=" !text-start font-bold text-xl">Add Orders</h1>
-                      <div className="flex flex-col items-center md:flex-row gap-6 w-full">
-                        <input
-                          type="text"
-                          value={name}
-                          onChange={(e) => setName(e.target.value)}
-                          className="outline-gray-500 rounded-[8px] bg-[#F7F8FA] px-4 py-4 w-[90%] md:w-[50%]"
-                          placeholder="Name*"
-                        />
-                        <input
-                          type="email"
-                          value={email}
-                          onChange={(e) => setEmail(e.target.value)}
-                          className="outline-gray-500 rounded-[8px] bg-[#F7F8FA] px-4 py-4 w-[90%] md:w-[50%]"
-                          placeholder="Email*"
-                        />
-                      </div>
-                      <div className="flex flex-col items-center md:flex-row gap-6 w-full">
-                        <input
-                          type="text"
-                          value={phoneNumber}
-                          onChange={(e) => setPhoneNumber(e.target.value)}
-                          className="outline-gray-500 rounded-[8px] bg-[#F7F8FA] px-4 py-4 w-[90%] md:w-[50%]"
-                          placeholder="Mobile Number*"
-                        />
+                      Cancel
+                    </button>
+                    <button
+                      onClick={handleRejection}
+                      className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
+                    >
+                      Reject
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {isFormModalOpen && (
+              <div className=" fixed top-0 left-0 w-full">
+                <div className=" absolute h-dvh bg-black  bg-opacity-50 w-full left-0 top-0 flex justify-center items-center z-50 overflow-auto">
+                  <div ref={modalRef} className=" rounded-lg p-6 w-full mt-[20%]">
+                    <div className="  w-full flex flex-col md:flex-row gap-6 justify-center">
+                      <form
+                        onSubmit={handleSubmit}
+                        className=" bg-white p-5 rounded-xl flex flex-col items-center gap-4 w-full md:w-1/2"
+                      >
+                        <div className=" flex justify-between w-full items-center">
+                          <h1 className=" !text-start font-bold text-xl">
+                            Add Orders
+                          </h1>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className=" font-bold text-xl text-red-500"
+                            onClick={() => setIsFormModalOpen(false)}
+                          >
+                            X
+                          </Button>
+                        </div>
+                        <div className="flex flex-col items-center md:flex-row gap-6 w-full">
+                          <input
+                            type="text"
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                            className="outline-gray-500 rounded-[8px] bg-[#F7F8FA] px-4 py-4 w-[90%] md:w-[50%]"
+                            placeholder="Name*"
+                          />
+                          <input
+                            type="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            className="outline-gray-500 rounded-[8px] bg-[#F7F8FA] px-4 py-4 w-[90%] md:w-[50%]"
+                            placeholder="Email*"
+                          />
+                        </div>
+                        <div className="flex flex-col items-center md:flex-row gap-6 w-full">
+                          <input
+                            type="text"
+                            value={phoneNumber}
+                            onChange={(e) => setPhoneNumber(e.target.value)}
+                            className="outline-gray-500 rounded-[8px] bg-[#F7F8FA] px-4 py-4 w-[90%] md:w-[50%]"
+                            placeholder="Mobile Number*"
+                          />
+                          <select
+                            value={selectedService}
+                            onChange={(e) =>
+                              handleServiceChange(e.target.value)
+                            }
+                            className="block outline-gray-500 rounded-[8px] bg-[#F7F8FA] px-4 py-4 w-[90%] md:w-[50%]"
+                          >
+                            <option value="" disabled>
+                              Select a Service*
+                            </option>
+                            {Object.keys(servicePrices).map((service) => (
+                              <option key={service} value={service}>
+                                {service}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                        <div className="flex flex-col items-center md:flex-row gap-6 w-full">
+                          <input
+                            type="text"
+                            value={price}
+                            readOnly
+                            className="outline-gray-500 rounded-[8px] bg-[#F7F8FA] px-4 py-4 w-[90%] md:w-[50%] cursor-not-allowed"
+                            placeholder="Price*"
+                          />
+                          <input
+                            type="text"
+                            value={pincode}
+                            onChange={(e) => setPincode(e.target.value)}
+                            className="outline-gray-500 rounded-[8px] bg-[#F7F8FA] px-4 py-4 w-[90%] md:w-[50%]"
+                            placeholder="Pincode*"
+                          />
+                        </div>
                         <select
-                          value={selectedService}
-                          onChange={(e) => handleServiceChange(e.target.value)}
-                          className="block outline-gray-500 rounded-[8px] bg-[#F7F8FA] px-4 py-4 w-[90%] md:w-[50%]"
+                          id="timeSlot"
+                          className="block bg-[#F7F8FA] px-4 py-4 w-[90%] md:w-full outline-gray-500 rounded-[8px]"
+                          value={
+                            selectedSlot
+                              ? `${selectedDate}|${selectedSlot}`
+                              : ""
+                          }
+                          onChange={(e) => {
+                            if (e.target.value) {
+                              const [date, slot] = e.target.value.split("|");
+                              setSelectedDate(date);
+                              setSelectedSlot(slot);
+                            } else {
+                              setSelectedDate("");
+                              setSelectedSlot("");
+                            }
+                          }}
                         >
                           <option value="" disabled>
-                            Select a Service*
+                            Choose a time slot
                           </option>
-                          {Object.keys(servicePrices).map((service) => (
-                            <option key={service} value={service}>
-                              {service}
-                            </option>
-                          ))}
+                          {Object.keys(availableSlots).length === 0 ? (
+                            <option disabled>No slots available</option>
+                          ) : (
+                            Object.keys(availableSlots).map(
+                              (date) =>
+                                availableSlots[date].length > 0 && (
+                                  <optgroup key={date} label={date}>
+                                    {availableSlots[date].map((slot) => (
+                                      <option
+                                        key={`${date}|${slot}`}
+                                        value={`${date}|${slot}`}
+                                      >
+                                        {slot}
+                                      </option>
+                                    ))}
+                                  </optgroup>
+                                )
+                            )
+                          )}
                         </select>
-                      </div>
-                      <div className="flex flex-col items-center md:flex-row gap-6 w-full">
+
                         <input
                           type="text"
-                          value={price}
-                          readOnly
-                          className="outline-gray-500 rounded-[8px] bg-[#F7F8FA] px-4 py-4 w-[90%] md:w-[50%] cursor-not-allowed"
-                          placeholder="Price*"
+                          value={address}
+                          onChange={(e) => setAddress(e.target.value)}
+                          className="bg-[#F7F8FA] w-[90%] md:w-full px-4 py-4 outline-gray-500 rounded-[8px]"
+                          placeholder="Address*"
                         />
                         <input
                           type="text"
-                          value={pincode}
-                          onChange={(e) => setPincode(e.target.value)}
-                          className="outline-gray-500 rounded-[8px] bg-[#F7F8FA] px-4 py-4 w-[90%] md:w-[50%]"
-                          placeholder="Pincode*"
+                          value={landmark}
+                          onChange={(e) => setLandmark(e.target.value)}
+                          className="bg-[#F7F8FA] w-[90%] md:w-full px-4 py-4 outline-gray-500 rounded-[8px]"
+                          placeholder="Landmark*"
                         />
-                      </div>
-                      <select
-                        id="timeSlot"
-                        className="block bg-[#F7F8FA] px-4 py-4 w-[90%] md:w-full outline-gray-500 rounded-[8px]"
-                        value={
-                          selectedSlot ? `${selectedDate}|${selectedSlot}` : ""
-                        }
-                        onChange={(e) => {
-                          if (e.target.value) {
-                            const [date, slot] = e.target.value.split("|");
-                            setSelectedDate(date);
-                            setSelectedSlot(slot);
-                          } else {
-                            setSelectedDate("");
-                            setSelectedSlot("");
-                          }
-                        }}
-                      >
-                        <option value="" disabled>
-                          Choose a time slot
-                        </option>
-                        {Object.keys(availableSlots).length === 0 ? (
-                          <option disabled>No slots available</option>
-                        ) : (
-                          Object.keys(availableSlots).map(
-                            (date) =>
-                              availableSlots[date].length > 0 && (
-                                <optgroup key={date} label={date}>
-                                  {availableSlots[date].map((slot) => (
-                                    <option
-                                      key={`${date}|${slot}`}
-                                      value={`${date}|${slot}`}
-                                    >
-                                      {slot}
-                                    </option>
-                                  ))}
-                                </optgroup>
-                              )
-                          )
-                        )}
-                      </select>
+                        <textarea
+                          value={notes}
+                          onChange={(e) => setNotes(e.target.value)}
+                          className="bg-[#F7F8FA] mt-2 w-[90%] md:w-full px-4 py-4 h-60 outline-gray-500 rounded-[8px]"
+                          placeholder="Additional Notes (optional)"
+                        ></textarea>
 
-                      <input
-                        type="text"
-                        value={address}
-                        onChange={(e) => setAddress(e.target.value)}
-                        className="bg-[#F7F8FA] w-[90%] md:w-full px-4 py-4 outline-gray-500 rounded-[8px]"
-                        placeholder="Address*"
-                      />
-                      <input
-                        type="text"
-                        value={landmark}
-                        onChange={(e) => setLandmark(e.target.value)}
-                        className="bg-[#F7F8FA] w-[90%] md:w-full px-4 py-4 outline-gray-500 rounded-[8px]"
-                        placeholder="Landmark*"
-                      />
-                      <textarea
-                        value={notes}
-                        onChange={(e) => setNotes(e.target.value)}
-                        className="bg-[#F7F8FA] mt-2 w-[90%] md:w-full px-4 py-4 h-60 outline-gray-500 rounded-[8px]"
-                        placeholder="Additional Notes (optional)"
-                      ></textarea>
+                        {error && <div className="text-red-500">{error}</div>}
 
-                      {error && <div className="text-red-500">{error}</div>}
-
-                      <button
-                        type="submit"
-                        className="text-white text-xl w-[90%] md:w-full mt-2 bg-black whitespace-nowrap rounded-[8px] py-3"
-                      >
-                        Book Order
-                      </button>
-                    </form>
+                        <button
+                          type="submit"
+                          className="text-white text-xl w-[90%] md:w-full mt-2 bg-black whitespace-nowrap rounded-[8px] py-3"
+                        >
+                          Book Order
+                        </button>
+                      </form>
+                    </div>
                   </div>
                 </div>
               </div>
