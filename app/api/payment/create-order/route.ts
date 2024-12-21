@@ -29,16 +29,16 @@ export async function POST(req: Request) {
         { status: 400 }
       );
     }
+  
 
     // Calculate price based on service
     const servicePrices: Record<string, number> = {
-      "Car foam wash": 649,
-      "Bike foam wash": 449,
+      "Car foam wash": 679,
       "Car + Bike combo": 899,
-      "Bi Weekly": 1099,
-      "Weekly": 2099,
-      "Battery jump start": 349,
+      "Bi Weekly": 1199,
+      "Weekly": 2199,
     };
+
 
     const price = servicePrices[service];
     if (!price) {
