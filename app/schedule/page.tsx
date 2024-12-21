@@ -235,6 +235,7 @@ const Booking = () => {
 
           if (verifyResponse.ok) {
             toast.success("Payment successful!");
+            console.log("Payment status updated to Success.");
             resetForm();
           } else {
             toast.error(verifyResult.message || "Payment verification failed");
