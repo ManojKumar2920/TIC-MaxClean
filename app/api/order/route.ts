@@ -154,10 +154,14 @@ export async function POST(req: Request) {
 
 export async function GET() {
   try {
+    // Ensure database connection
     await connectDB();
+    console.log("Database connected successfully");
 
+    // Verify authentication
     const authResult = await verifyAuth();
-    if ('error' in authResult) {
+    if ("error" in authResult) {
+      console.log("Authentication failed:", authResult.error);
       return NextResponse.json(
         { message: authResult.error },
         { status: authResult.status }
@@ -168,10 +172,14 @@ export async function GET() {
 
     // Fetch orders based on user role
     if (user.role === "admin") {
-      const orders = await Order.find().sort({ createdAt: -1 });
+      // console.log("Fetching all orders for admin...");
+      const orders = await Order.find().sort({ updatedAt: -1 });
+      // console.log("Orders fetched:", orders);
       return NextResponse.json({ orders }, { status: 200 });
     } else {
-      const userOrders = await Order.find({ userId: user._id }).sort({ createdAt: -1 });
+      // console.log(`Fetching orders for user: ${user.userId}`);
+      const userOrders = await Order.find({ userId: user.userId }).sort({ updatedAt: -1 });
+      // console.log("User orders fetched:", userOrders);
       return NextResponse.json({ orders: userOrders }, { status: 200 });
     }
   } catch (error) {

@@ -289,7 +289,8 @@ export default function Dashboard() {
     try {
       const response = await axios.get("/api/order");
       const data = response.data;
-      setOrders(data.orders || []);
+
+      setOrders(data.orders);
 
       // Helper function for calculating percentage changes
       const calculateChange = (current: number, previous: number) => {
@@ -520,7 +521,7 @@ export default function Dashboard() {
     "Car foam wash": "679",
     "Car + Bike combo": "899",
     "Bi Weekly": "1199",
-    "Weekly": "2199",
+    Weekly: "2199",
   };
 
   const [selectedDate, setSelectedDate] = useState("");
@@ -1426,7 +1427,10 @@ export default function Dashboard() {
             {isFormModalOpen && (
               <div className=" fixed top-0 left-0 w-full">
                 <div className=" absolute h-dvh bg-black  bg-opacity-50 w-full left-0 top-0 flex justify-center items-center z-50 overflow-auto">
-                  <div ref={modalRef} className=" rounded-lg p-6 w-full mt-[20%]">
+                  <div
+                    ref={modalRef}
+                    className=" rounded-lg p-6 w-full mt-[20%]"
+                  >
                     <div className="  w-full flex flex-col md:flex-row gap-6 justify-center">
                       <form
                         onSubmit={handleSubmit}
