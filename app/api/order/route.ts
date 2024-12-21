@@ -10,8 +10,15 @@ import { sendOntheWayMail } from "@/utils/SendOnTheWayMail";
 
 const REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET as string;
 
+
+interface VerifyAuthResult {
+  user?: any;  // Replace 'any' with your User type
+  error?: string;
+  status?: number;
+}
+
 // Utility function to verify user authentication
-async function verifyAuth() {
+async function verifyAuth(): Promise<VerifyAuthResult> {
   const refreshTokenCookie = (await cookies()).get("refreshToken");
 
   if (!refreshTokenCookie?.value) {
@@ -19,19 +26,43 @@ async function verifyAuth() {
   }
 
   try {
-    const decoded = verify(refreshTokenCookie.value, REFRESH_TOKEN_SECRET) as { userId: string };
-    if (!decoded.userId) {
+    const decoded = verify(refreshTokenCookie.value, REFRESH_TOKEN_SECRET) as {
+      userId: string;
+      email: string;
+    };
+
+    if (!decoded.email) {
       return { error: "Unauthorized: Invalid token payload.", status: 401 };
     }
 
-    const user = await User.findOne({ email: decoded.userId });
+    const user = await User.findOne({ email: decoded.email })
+      .select('firstName lastName email role');  // Only select needed fields
+      
     if (!user) {
       return { error: "Unauthorized: User not found.", status: 404 };
     }
 
-    return { user };
+    // Return user without sensitive fields
+    return { 
+      user: {
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        role: user.role
+      }
+    };
+
   } catch (error) {
-    return { error: "Unauthorized: Invalid or expired token.", status: 401 };
+    if (error instanceof Error) {
+      // Provide more specific error messages for token issues
+      if (error.name === 'TokenExpiredError') {
+        return { error: "Unauthorized: Token has expired.", status: 401 };
+      }
+      if (error.name === 'JsonWebTokenError') {
+        return { error: "Unauthorized: Invalid token.", status: 401 };
+      }
+    }
+    return { error: "Unauthorized: Token verification failed.", status: 401 };
   }
 }
 
