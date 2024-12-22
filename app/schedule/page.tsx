@@ -1,19 +1,10 @@
 "use client";
 import React from "react";
-// import Navbar from "@/pages/NavBar";
 import dark from "@/assets/dark.png";
 import bubble from "@/assets/pixelcut-export.png";
 import { useState } from "react";
-import logo from "@/assets/logo.png";
-// import x from "@/assets/x.png";
-// import fb from "@/assets/fb.png";
-// import insta from "@/assets/insta.png";
-// import git from "@/assets/git.png";
-import ReactDatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { useEffect } from "react";
-import { usePathname } from "next/navigation";
-import Link from "next/link";
 import Faq from "@/components/Faq";
 import Footer from "@/components/Footer";
 import MobileNavbar from "@/components/MobileNavbar";
@@ -37,6 +28,7 @@ const ScheduleWash = () => {
     </div>
   );
 };
+
 
 export default ScheduleWash;
 

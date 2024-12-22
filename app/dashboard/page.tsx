@@ -110,14 +110,11 @@ export default function Dashboard() {
         const response = await axios.get("/api/user"); // The API route to get user details
         const data = response.data;
 
-        console.log(data.authMethod);
-
         setUserDetails({
           name: `${data.user.firstName} ${data.user.lastName || ""}`,
           role: data.user.role,
         });
       } catch (error) {
-        console.log(error);
         toast.error("Unable to fetch user details.");
       } finally {
         setLoading(false);
@@ -133,8 +130,6 @@ export default function Dashboard() {
         const response = await axios.get("/api/order"); // Fetch orders using Axios
         const data = response.data;
         setOrders(data.orders || []);
-
-        console.log("Fetched Orders:", data.orders);
 
         // Helper function for calculating percentage changes
         const calculateChange = (current: number, previous: number) => {
@@ -157,19 +152,16 @@ export default function Dashboard() {
 
         // Metrics calculation for a period
         const calculateMetrics = (orders: Order[]) => {
-          console.log("Orders being processed:", orders); // Log orders being processed
 
           const totalRevenue = orders
             .filter((order) => order.paymentStatus === "Success")
             .reduce((sum, order) => {
               // Ensure order.price is a valid number
-              const orderPrice = Number(order.price) || 0; // Explicitly convert price to a number
-              console.log("Order Price:", orderPrice); // Log the price to verify
+              const orderPrice = Number(order.price) || 0; 
 
               return sum + orderPrice; // Add valid price to the sum
             }, 0);
 
-          console.log("Total Revenue:", totalRevenue); // Log the total revenue to verify
 
           const revenue = totalRevenue;
 
@@ -213,7 +205,7 @@ export default function Dashboard() {
           },
         });
       } catch (error) {
-        console.error("Error fetching orders:", error);
+        toast.error(`Error fetching orders: ${error}` );
       }
     };
 

@@ -7,7 +7,6 @@ import User from "@/models/User";
 import { sendAcceptMail } from "@/utils/SendAcceptMail";
 import { sendRejectMail } from "@/utils/SendRejectMail";
 import { sendOntheWayMail } from "@/utils/SendOnTheWayMail";
-import { sendOrderMail } from "@/utils/SendOrderMail";
 
 const REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET as string;
 
@@ -152,6 +151,8 @@ export async function POST(req: Request) {
     );
   }
 }
+
+
 
 export async function GET() {
   try {
