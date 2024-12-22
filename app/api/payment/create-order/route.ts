@@ -17,8 +17,6 @@ const razorpay = new Razorpay({
 export async function POST(req: Request) {
   try {
     await connectDB();
-
-    // Parse the request body
     const { orderId } = await req.json();
 
     // Validate the orderId

@@ -18,9 +18,9 @@ import Faq from "@/components/Faq";
 import Footer from "@/components/Footer";
 import MobileNavbar from "@/components/MobileNavbar";
 import Navbar from "@/components/NavBar";
-import { loadRazorpay } from "@/lib/razorpay";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Script from "next/script";
 
 const ScheduleWash = () => {
   return (
@@ -214,9 +214,7 @@ const Booking = () => {
       }
   
       console.log("Razorpay Order ID:", razorpayOrderId); // Log Razorpay orderId
-  
-      // Step 2: Load Razorpay and initiate the payment
-      const razorpay = await loadRazorpay();
+
   
       const options = {
         key, // Razorpay key from backend
@@ -287,7 +285,7 @@ const Booking = () => {
       };
   
       // Open Razorpay payment modal
-      const paymentObject = new razorpay(options);
+      const paymentObject = new window.Razorpay(options);
       paymentObject.open();
     } catch (error) {
       console.error("Payment initiation error:", error);
@@ -363,6 +361,7 @@ const Booking = () => {
 
   return (
     <div className="py-20 mt-10 w-full flex flex-col h-full items-center gap-14">
+      <Script src="https://checkout.razorpay.com/v1/checkout.js" />
       <h1 className="md:text-[60px] text-5xl text-center">
         Book an appointment <span className="text-[#D70006]">now</span>
       </h1>

@@ -1,7 +1,21 @@
-import type { NextConfig } from "next";
+import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
-  /* config options here */
-};
+  async headers() {
+    return [
+      {
+        // Apply these headers to all routes
+        source: '/:path*',
+        headers: [
+          {
+            key: 'x-rtb-fingerprint-id',
+            value: '*' // Allow this header
+          }
+        ]
+      }
+    ]
+  },
+  // Other Next.js config options...
+}
 
-export default nextConfig;
+export default nextConfig
