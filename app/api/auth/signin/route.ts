@@ -134,6 +134,7 @@ export async function POST(req: NextRequest) {
       path: "/",
       maxAge: 30 * 24 * 60 * 60, // 30 days
       sameSite: "lax",
+      priority: "high",
     });
 
     // Remove the used OTP

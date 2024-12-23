@@ -3,65 +3,64 @@ import { NextRequest, NextResponse } from "next/server";
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
-  // Define protected routes
-  const protectedRoutes = ["/dashboard", "/schedule", "/admin"];
-  const adminRoutes = ["/admin"];
-  const authPages = ["/signin", "/signup"];
+  // Define route groups
+  const protectedRoutes = /^\/(dashboard|schedule|admin)/;
+  const adminRoutes = /^\/admin/;
+  const authPages = /^\/(signin|signup)/;
 
   // Skip auth check for API and static routes
-  if (pathname.startsWith('/api/') || pathname.includes('/_next/') || pathname.includes('/static/')) {
+  if (
+    pathname.startsWith("/api/") ||
+    pathname.startsWith("/_next/") ||
+    pathname.startsWith("/static/") ||
+    pathname === "/favicon.ico"
+  ) {
     return NextResponse.next();
   }
 
   try {
-    // Check user authentication
-    const res = await fetch(`https://themaxclean.com/api/user`, {
+    // Fetch user details
+    const res = await fetch("https://themaxclean.com/api/user", {
       headers: {
         cookie: req.headers.get("cookie") || "",
       },
     });
 
-    // For protected routes
-    if (protectedRoutes.some((route) => pathname.startsWith(route))) {
-      if (!res.ok) {
-        // User is not authenticated, redirect to signin
+    const isAuthenticated = res.ok;
+    const user = isAuthenticated ? await res.json() : null;
+
+    // Handle protected routes
+    if (protectedRoutes.test(pathname)) {
+      if (!isAuthenticated) {
         return NextResponse.redirect(new URL("/signin", req.url));
       }
 
-      const { user } = await res.json();
-
-      // Check admin routes
-      if (adminRoutes.some((route) => pathname.startsWith(route))) {
-        if (user.role !== "admin") {
-          return NextResponse.redirect(new URL("/dashboard", req.url));
-        }
-      }
-    }
-
-    // For auth pages (signin/signup)
-    if (authPages.some((page) => pathname.startsWith(page))) {
-      if (res.ok) {
-        // User is already authenticated, redirect to dashboard
+      // Handle admin-only routes
+      if (adminRoutes.test(pathname) && user.role !== "admin") {
         return NextResponse.redirect(new URL("/dashboard", req.url));
       }
     }
 
+    // Handle auth pages (signin/signup)
+    if (authPages.test(pathname) && isAuthenticated) {
+      return NextResponse.redirect(new URL("/dashboard", req.url));
+    }
   } catch (error) {
     console.error("Middleware error:", error);
-    // On error, redirect to signin for protected routes
-    if (protectedRoutes.some((route) => pathname.startsWith(route))) {
+
+    // Redirect to signin on error for protected routes
+    if (protectedRoutes.test(pathname)) {
       return NextResponse.redirect(new URL("/signin", req.url));
     }
   }
-  
 
+  // Allow the request to proceed
   return NextResponse.next();
-
-  
 }
 
+// Configure the matcher for efficient routing
 export const config = {
   matcher: [
-    '/((?!api|_next/static|_next/image|favicon.ico).*)',
-  ]
+    "/((?!api|_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml).*)",
+  ],
 };
