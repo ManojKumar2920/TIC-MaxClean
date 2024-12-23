@@ -205,19 +205,19 @@ const Booking = () => {
         return;
       }
   
-      console.log("Razorpay Order ID:", razorpayOrderId); // Log Razorpay orderId
+      console.log("Razorpay Order ID:", razorpayOrderId); 
 
   
       const options = {
-        key, // Razorpay key from backend
-        amount: parseInt(price) * 100, // Amount in paise (multiply by 100)
+        key,
+        amount: parseInt(price) * 100, 
         currency: "INR",
         name: "MaxClean",
         description: `${selectedService} Service`,
-        order_id: razorpayOrderId, // Use the Razorpay orderId
+        order_id: razorpayOrderId, 
         handler: async (response: any) => {
-          console.log("Razorpay response:", response); // Debug the Razorpay response
-  
+          console.log("Razorpay response:", response); 
+
           // Step 3: Verify payment after successful payment
           const verifyResponse = await fetch("/api/payment/verify-order", {
             method: "POST",
@@ -285,9 +285,6 @@ const Booking = () => {
     }
   };
   
-  
-  
-
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 

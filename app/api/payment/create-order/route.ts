@@ -58,7 +58,7 @@ export async function POST(req: Request) {
 
     // Step 2: Create the Razorpay order
     const razorpayOrder = await razorpay.orders.create({
-      amount: 1 * 100, // Razorpay expects the amount in paise (1 INR = 100 paise)
+      amount: price * 100, // Razorpay expects the amount in paise (1 INR = 100 paise)
       currency: "INR",
       receipt: `receipt_order_${orderId}`,
       payment_capture: true, // Auto-capture payments
