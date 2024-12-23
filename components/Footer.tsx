@@ -3,7 +3,9 @@ import logo from "@/assets/logo.png";
 import x from "@/assets/x.png";
 import fb from "@/assets/fb.png";
 import insta from "@/assets/insta.png";
-import git from "@/assets/git.png";
+import { FaLinkedinIn as Linkedin } from "react-icons/fa6";
+import { BsTwitterX as XIcon } from "react-icons/bs";
+import Link from "next/link";
 
 const Footer = () => {
   return (
@@ -70,11 +72,14 @@ const Footer = () => {
                 +
               </button>
             </div>
-            <div className="flex md:justify-end items-center  mt-6 md:mt-6 gap-6">
-              <img src={x.src} className=" w-5 h-full" alt="" />
-              <img src={fb.src} alt="" className=" w-3  h-full" />
-              <img src={insta.src} alt="" className=" w-5 h-full" />
-              <img src={git.src} alt="" className=" w-5  h-full" />
+            <div className="flex md:justify-center items-center  mt-6 md:mt-6 gap-6">
+
+              <Link href={'https://www.instagram.com/maxcleanindia/profilecard/?igsh=dXR4emQzNXk2Mjdn'}><img src={insta.src} alt="" className=" w-5 h-full" /></Link>
+              <Link href={'https://x.com/mxclen?s=11'}><XIcon className=" w-5 h-full" /></Link>
+              {/* <Link href={'https://www.facebook.com/maxcleanindia'}><img src={fb.src} alt="" className=" w-3  h-full" /></Link> */}
+              {/* <Link href={'https://www.linkedin.com/in/karthik-vallabhaneni-05b07733b?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app'}><Linkedin className=" w-5 h-full" /></Link> */}
+              
+
             </div>
           </div>
 

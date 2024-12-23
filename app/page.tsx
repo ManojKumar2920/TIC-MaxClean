@@ -10,19 +10,9 @@ import two from "@/assets/home2.png";
 import three from "@/assets/home3.png";
 import eyeleft from "@/assets/eyeleft.png";
 import eyeright from "@/assets/eyeright.png";
-import qr from "@/assets/qr.png";
-import app from "@/assets/app.png";
-import goo from "@/assets/goo.png";
-// // import dots from "../assets/dots.png";
-import logo from "@/assets/logo.png";
-import x from "@/assets/x.png";
-import fb from "@/assets/fb.png";
-import insta from "@/assets/insta.png";
-import git from "@/assets/git.png";
 import star from "@/assets/star.png";
-import dots from "@/assets/dots.png";
 import Mobilenav from "../components/MobileNavbar";
-import CountUp from "react-countup";
+
 import Link from"next/link"
 
 import { useInView } from "react-intersection-observer";
@@ -37,7 +27,7 @@ export default function Home() {
       <Steps />
       <ThridSection />
       <Testmonials />
-      <Numbers />
+      {/* <Numbers /> */}
       <Faq />
       <Footer />
     </div>
@@ -305,58 +295,58 @@ const Testmonials = () => {
   );
 };
 
-const Numbers = () => {
-  // Track when the section is in view
-  const { ref, inView } = useInView({
-    triggerOnce: true, // Trigger only once
-    threshold: 0.5, // Trigger when 50% of the section is visible
-  });
+// const Numbers = () => {
+//   // Track when the section is in view
+//   const { ref, inView } = useInView({
+//     triggerOnce: true, // Trigger only once
+//     threshold: 0.5, // Trigger when 50% of the section is visible
+//   });
 
-  return (
-    <div
-      ref={ref}
-      className="items-center flex flex-wrap py-40 gap-20 flex-col justify-center w-full text-white bg-[#D70006]"
-    >
-      <h1 className="text-5xl md:text-[80px] text-center">By the Numbers</h1>
-      <div className="w-full flex-wrap flex flex-col items-center gap-6 justify-center">
-        {/* Highlighted Section */}
-        <div className="flex rounded-[30px] md:flex-row flex-col md:flex-nowrap flex-wrap items-center justify-center md:px-4 md:py-0 py-4 md:gap-10 bg-black w-[80%]">
-          <h1 className="md:text-[90px] text-[70px]">
-            {inView ? <CountUp start={0} end={2342} duration={2.5} /> : 0}
-          </h1>
-          <p className="text-2xl md:text-[46px] md:text-left text-center md:leading-[46px]">
-            mobile app <br className="md:block hidden" />
-            installations
-          </p>
-        </div>
+//   return (
+//     <div
+//       ref={ref}
+//       className="items-center flex flex-wrap py-40 gap-20 flex-col justify-center w-full text-white bg-[#D70006]"
+//     >
+//       <h1 className="text-5xl md:text-[80px] text-center">By the Numbers</h1>
+//       <div className="w-full flex-wrap flex flex-col items-center gap-6 justify-center">
+//         {/* Highlighted Section */}
+//         <div className="flex rounded-[30px] md:flex-row flex-col md:flex-nowrap flex-wrap items-center justify-center md:px-4 md:py-0 py-4 md:gap-10 bg-black w-[80%]">
+//           <h1 className="md:text-[90px] text-[70px]">
+//             {inView ? <CountUp start={0} end={2342} duration={2.5} /> : 0}
+//           </h1>
+//           <p className="text-2xl md:text-[46px] md:text-left text-center md:leading-[46px]">
+//             mobile app <br className="md:block hidden" />
+//             installations
+//           </p>
+//         </div>
 
-        {/* Other Numbers */}
-        <div className="flex-wrap md:flex-nowrap flex justify-around gap-6 w-[80%]">
-          {/* Shop Owners Card 1 */}
-          <div className="md:py-0 pb-4 bg-black w-full rounded-[30px] text-center">
-            <h1 className="md:text-[90px] text-[70px]">
-              {inView ? <CountUp start={0} end={1564} duration={2.5} /> : 0}
-            </h1>
-            <h2 className="text-[20px] -mt-6">shop owners</h2>
-          </div>
+//         {/* Other Numbers */}
+//         <div className="flex-wrap md:flex-nowrap flex justify-around gap-6 w-[80%]">
+//           {/* Shop Owners Card 1 */}
+//           <div className="md:py-0 pb-4 bg-black w-full rounded-[30px] text-center">
+//             <h1 className="md:text-[90px] text-[70px]">
+//               {inView ? <CountUp start={0} end={1564} duration={2.5} /> : 0}
+//             </h1>
+//             <h2 className="text-[20px] -mt-6">shop owners</h2>
+//           </div>
 
-          {/* Shop Owners Card 2 */}
-          <div className="md:py-0 pb-4 text-center rounded-[30px] bg-black w-full">
-            <h1 className="md:text-[90px] text-[70px]">
-              {inView ? <CountUp start={0} end={1564} duration={2.5} /> : 0}
-            </h1>
-            <h2 className="text-[20px] -mt-6">shop owners</h2>
-          </div>
+//           {/* Shop Owners Card 2 */}
+//           <div className="md:py-0 pb-4 text-center rounded-[30px] bg-black w-full">
+//             <h1 className="md:text-[90px] text-[70px]">
+//               {inView ? <CountUp start={0} end={1564} duration={2.5} /> : 0}
+//             </h1>
+//             <h2 className="text-[20px] -mt-6">shop owners</h2>
+//           </div>
 
-          {/* Shop Owners Card 3 */}
-          <div className="md:py-0 pb-4 bg-black text-center rounded-[30px] w-full">
-            <h1 className="md:text-[90px] text-[70px]">
-              {inView ? <CountUp start={0} end={1564} duration={2.5} /> : 0}
-            </h1>
-            <h2 className="text-[20px] -mt-6 md:mb-4 mb-0">shop owners</h2>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
+//           {/* Shop Owners Card 3 */}
+//           <div className="md:py-0 pb-4 bg-black text-center rounded-[30px] w-full">
+//             <h1 className="md:text-[90px] text-[70px]">
+//               {inView ? <CountUp start={0} end={1564} duration={2.5} /> : 0}
+//             </h1>
+//             <h2 className="text-[20px] -mt-6 md:mb-4 mb-0">shop owners</h2>
+//           </div>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };

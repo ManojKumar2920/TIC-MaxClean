@@ -7,6 +7,8 @@ export const sendOrderSMS = async (
   price: number,
   date: string,
   timeSlot: string,
+  phone: string,
+  address: string,
   razorpayOrderId: string | undefined
 ): Promise<void> => {
   const smsApiKey = process.env.TWOFACTOR_API_KEY;
@@ -17,15 +19,24 @@ export const sendOrderSMS = async (
     Service: ${service}, Price: ₹${price}, Date: ${date}, Time Slot: ${timeSlot}, Order ID: ${razorpayOrderId}.
     If you have questions, contact us at maxcleanbusiness@gmail.com. Team MaxClean!
   `.trim();
-
-  const phoneNumbers = ["9597028220"];
+  
+  const phoneNumbers = ["7780275118", "9885312902", "9515813423", "8179987444"];
   const toField = phoneNumbers.join(",");
 
   const data = qs.stringify({
     module: "TRANS_SMS",
     apikey: smsApiKey,
     to: toField,
-    from: "MAXCLN",
+    from: "MAXCLA",
+    templatename: "sendOrderDetailsToTeam",
+        var1: name,
+        var2: service,
+        var3: price,
+        var4: date,
+        var5: timeSlot,
+        var6: razorpayOrderId,
+        var7: phone,
+        var8: address,
     message: smsContent,
   });
 

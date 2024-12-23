@@ -88,6 +88,8 @@ export async function POST(req: Request) {
         order.price,
         order.date,
         order.timeSlot,
+        order.phoneNumber,
+        order.address,
         order.razorpayOrderId
       );
     }
