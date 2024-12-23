@@ -82,7 +82,7 @@ export async function sendWelcomeMail(email: string, name: string) {
   <div class="email-container">
     <!-- Header -->
     <div class="header">
-      <img src="logo.png" alt="MaxClean Logo" />
+      <img src="https://www.themaxclean.com/_next/static/media/logo.75d968a2.png" alt="MaxClean Logo" />
       <h1>Welcome to MaxClean!</h1>
     </div>
 

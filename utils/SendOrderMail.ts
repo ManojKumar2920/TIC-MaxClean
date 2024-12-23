@@ -100,7 +100,7 @@ export const sendOrderMail = async (
   <div class="email-container">
     <!-- Header -->
     <div class="header">
-      <img src="/logo.png" alt="MaxClean" />
+      <img src="https://www.themaxclean.com/_next/static/media/logo.75d968a2.png" alt="MaxClean" />
       <h1>Order Confirmation</h1>
     </div>
 

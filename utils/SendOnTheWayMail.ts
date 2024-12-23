@@ -100,7 +100,7 @@ export const sendOntheWayMail = async (
   <div class="email-container">
     <!-- Header -->
     <div class="header">
-      <img src="https://www.themaxclean.com/img/logo.png" alt="MaxClean" />
+      <img src="https://www.themaxclean.com/_next/static/media/logo.75d968a2.png" alt="MaxClean" />
       <h1>Your Order is On the Way</h1>
     </div>
 

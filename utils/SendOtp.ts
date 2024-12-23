@@ -120,7 +120,7 @@ export async function sendEmailOtp(email: string, otp: string) {
   <div class="email-container">
     <!-- Header -->
     <div class="header">
-      <img src="/logo.png" alt="MaxClean" />
+      <img src="https://www.themaxclean.com/_next/static/media/logo.75d968a2.png" alt="MaxClean" />
       <h1>Email Verification</h1>
     </div>
 
