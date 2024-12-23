@@ -13,6 +13,7 @@ import MobileBav from "@/components/MobileNavbar";
 import { useRef, useEffect } from "react";
 import { motion, useAnimation } from "framer-motion";
 import Link from "next/link";
+import Image from "next/image";
 
 const About = () => {
   return (
@@ -108,7 +109,7 @@ const Vision = () => {
           animate={controlsCard1}
         >
           <div>
-            <img className="rounded-[30px]" src={v1.src} alt="" />
+            <Image className="rounded-[30px]" src={v1.src} alt="" />
           </div>
           <div className="flex flex-col">
             <h1 className="text-[28px] font-medium text-[#FF0000]">
@@ -130,7 +131,7 @@ const Vision = () => {
           animate={controlsCard2}
         >
           <div>
-            <img className="rounded-[30px]" src={v2.src} alt="" />
+            <Image className="rounded-[30px]" src={v2.src} alt="" />
           </div>
           <div className="flex flex-col">
             <h1 className="text-[28px] font-medium text-[#FF0000]">
@@ -152,7 +153,7 @@ const Vision = () => {
           animate={controlsCard3}
         >
           <div>
-            <img className="rounded-[30px]" src={v3.src} alt="" />
+            <Image className="rounded-[30px]" src={v3.src} alt="" />
           </div>
           <div className="flex flex-col">
             <h1 className="text-[28px] font-medium text-[#FF0000]">
@@ -181,7 +182,7 @@ const WhatWeDo = () => {
 
       {/* Car Image */}
       <div className="absolute z-[30]  hidden md:flex items-center justify-center ">
-        <img src={car.src} alt="Car" className=" w-full  object-contain" />
+        <Image src={car.src} alt="Car" className=" w-full  object-contain" />
       </div>
       <div className=" py-16 w-full flex flex-col md:items-center md:justify-center px-4   md:mt-0 mt-20 md:px-0 absolute z-[160]">
         <h1 className=" text-3xl md:text-[60px]   text-white">What we do ?</h1>
@@ -199,17 +200,17 @@ const WhatWeDo = () => {
           <div className="md:flex hidden  items-end space-x-5 overflow-hidden">
             {/* Image with Black Overlay */}
             <div className="relative w-1/3">
-              <img src={card.src} className="w-full" alt="" />
+              <Image src={card.src} className="w-full" alt="" />
               <div className="absolute inset-0  rounded-xl"></div>
             </div>
 
             <div className="relative w-1/4">
-              <img src={card.src} className="w-full" alt="" />
+              <Image src={card.src} className="w-full" alt="" />
               <div className="absolute inset-0 bg-black rounded-xl opacity-50"></div>
             </div>
 
             <div className="relative w-1/4">
-              <img src={card.src} className="w-full" alt="" />
+              <Image src={card.src} className="w-full" alt="" />
               <div className="absolute inset-0 bg-black rounded-xl opacity-50"></div>
             </div>
           </div>

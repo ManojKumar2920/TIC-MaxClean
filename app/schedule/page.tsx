@@ -12,6 +12,7 @@ import Navbar from "@/components/NavBar";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Script from "next/script";
+import Image from "next/image";
 
 const ScheduleWash = () => {
   return (
@@ -39,7 +40,7 @@ const Hero = () => {
       className="relative h-screen  bg-cover w-full text-white   flex items-center justify-center"
       style={{ backgroundImage: `url(${bubble.src})` }}
     >
-      <img
+      <Image
         src={dark.src}
         alt=""
         className="w-full h-full object-cover -z-[1]"
