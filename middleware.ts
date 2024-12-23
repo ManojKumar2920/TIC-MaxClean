@@ -15,7 +15,7 @@ export async function middleware(req: NextRequest) {
 
   try {
     // Check user authentication
-    const res = await fetch(`${req.nextUrl.origin}/api/user`, {
+    const res = await fetch(`https://themaxclean.com/api/user`, {
       headers: {
         cookie: req.headers.get("cookie") || "",
       },
