@@ -45,7 +45,7 @@ export async function POST(req: Request) {
     }
 
     // Retrieve order
-    const order = await Order.findOne({ razorpyOrderId : razorpay_order_id });
+    const order = await Order.findOne({ razorpayOrderId : razorpay_order_id });
 
     if (!order) {
       return NextResponse.json(
