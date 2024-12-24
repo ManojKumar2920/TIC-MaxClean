@@ -34,13 +34,13 @@ const Footer = () => {
           <div className="mb-4 md:mb-0  md:flex hidden    flex-col   items-center text-center">
             <div className=" text-white/70 flex gap-20  md:text-center text-left items-start justify-center text-[16px] mt-2">
               <div className="   items-start flex-col flex gap-2">
-                <h1 className=" cursor-pointer">Privacy Policy</h1>
-                <h1 className=" cursor-pointer">Terms of Service</h1>
+              <Link href={'/privacy'} className=" cursor-pointer">Privacy Policy</Link>
+              <Link href={'/terms'} className=" cursor-pointer">Terms of Service</Link>
               </div>
               
               <div className="  flex flex-col  gap-2 items-start">
                 {/* <h1 className=" cursor-pointer">Changelog</h1> */}
-                <h1 className=" cursor-pointer">Schedule Wash</h1>
+                <Link href={'/schedule'} className=" cursor-pointer">Schedule Wash</Link>
               </div>
             </div>
           </div>
@@ -49,26 +49,26 @@ const Footer = () => {
             <div className=" text-white/70 flex  flex-col  gap-4  text-[14px] mt-2">
               <div className="  flex gap-6 items-center ">
                 <div className="   items-start flex-col flex gap-1">
-                  <h1 className=" cursor-pointer">Privacy Policy</h1>
-                  <h1 className=" cursor-pointer">Terms of Service</h1>
+                  <Link href={'/privacy'} className=" cursor-pointer">Privacy Policy</Link>
+                  <Link href={'/terms'} className=" cursor-pointer">Terms of Service</Link>
                 </div>
               </div>
               <div className="   flex flex-col  gap-1 items-start">
                 {/* <h1 className=" cursor-pointer">Changelog</h1> */}
-                <h1 className=" cursor-pointer">Schedule Wash</h1>
+                <Link href={'/schedule'} className=" cursor-pointer">Schedule Wash</Link>
               </div>
             </div>
           </div>
 
           <div>
-            <div className=" w-fit flex  items-center justify-center mt-4 md:mt-0 text-center rounded-[10px]  overflow-hidden">
+            <Link href={'/schedule'} className=" w-fit flex  items-center justify-center mt-4 md:mt-0 text-center rounded-[10px]  overflow-hidden">
               <button className="bg-[#D7000680]  text-white md:text-[18px] text-xs w-[80%] px-5 md:py-5 py-3  font-semibold overflow-hidden">
                 SCHEDULE WASH
               </button>
               <button className="bg-white text-black md:text-[18px] text-xs h-fit   text-center font-semibold flex py-3 items-center justify-center px-5 md:py-5 w-[20%] whitespace-nowrap ">
                 +
               </button>
-            </div>
+            </Link>
             <div className="flex md:justify-center items-center  mt-6 md:mt-6 gap-6">
 
               <Link href={'https://www.instagram.com/maxcleanindia/profilecard/?igsh=dXR4emQzNXk2Mjdn'}><img src={insta.src} alt="" className=" w-5 h-full" /></Link>
