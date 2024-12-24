@@ -45,14 +45,14 @@ const Navbar = () => {
           >
             About
           </Link>
-          <Link
+          {/* <Link
             href="/review"
             className={`${
               isActive("/review") ? "text-red-600" : "text-white"
             } hover:text-[#E50914]`}
           >
             Reviews
-          </Link>
+          </Link> */}
           <Link
             href="/pricing"
             className={`${

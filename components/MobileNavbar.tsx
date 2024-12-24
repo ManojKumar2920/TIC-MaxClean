@@ -121,20 +121,20 @@ const Navbar = () => {
             >
               About
             </Link>
-            <Link
+            {/* <Link
               href="/review"
               className="text-white font-semibold uppercase hover:text-gray-600"
               onClick={toggleMenu}
             >
               Reviews
-            </Link>
-            <Link
+            </Link> */}
+            {/* <Link
               href="/GetApp"
               className="text-white font-semibold uppercase hover:text-gray-600"
               onClick={toggleMenu}
             >
               Get App
-            </Link>
+            </Link> */}
             <Link
               href="/pricing"
               className="text-white font-semibold uppercase hover:text-gray-600"
