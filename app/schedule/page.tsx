@@ -291,6 +291,8 @@ const Booking = () => {
 
     const validationErrors = [];
     if (!userDetails.name.trim()) validationErrors.push("Name is required");
+    if (!userDetails.email.trim()) validationErrors.push("Email is required");
+    if (!userDetails.phoneNumber.trim()) validationErrors.push("Phone Number is required");
     if (!selectedService)
       validationErrors.push("Service selection is required");
     if (!selectedSlot) validationErrors.push("Time slot is required");
@@ -511,8 +513,8 @@ const Booking = () => {
           </div>
           <div>
             <h1 className="text-3xl mb-2">Timings</h1>
-            <p>Monday - Friday: 10:00 AM to 6:00 PM</p>
-            <p>Saturday & Sunday: 10:00 AM to 3:00 PM</p>
+            <p>Monday - Sunday: 9:00 AM to 6:00 PM</p>
+            <p>Wednesday: Holiday</p>
           </div>
         </div>
       </div>

@@ -5,6 +5,7 @@ import fb from "@/assets/fb.png";
 import insta from "@/assets/insta.png";
 import { FaLinkedinIn as Linkedin } from "react-icons/fa6";
 import { BsTwitterX as XIcon } from "react-icons/bs";
+import { RiWhatsappFill as WhatsappIcon } from "react-icons/ri";
 import Link from "next/link";
 
 const Footer = () => {
@@ -51,13 +52,9 @@ const Footer = () => {
                   <h1 className=" cursor-pointer">Privacy Policy</h1>
                   <h1 className=" cursor-pointer">Terms of Service</h1>
                 </div>
-                <div className=" flex  flex-col items-start gap-1">
-                  <h1 className=" cursor-pointer">Shop Owners</h1>
-                  <h1 className=" cursor-pointer">Licences</h1>
-                </div>
               </div>
               <div className="   flex flex-col  gap-1 items-start">
-                <h1 className=" cursor-pointer">Changelog</h1>
+                {/* <h1 className=" cursor-pointer">Changelog</h1> */}
                 <h1 className=" cursor-pointer">Schedule Wash</h1>
               </div>
             </div>
@@ -78,10 +75,9 @@ const Footer = () => {
               <Link href={'https://x.com/mxclen?s=11'}><XIcon className=" w-5 h-full" /></Link>
               {/* <Link href={'https://www.facebook.com/maxcleanindia'}><img src={fb.src} alt="" className=" w-3  h-full" /></Link> */}
               {/* <Link href={'https://www.linkedin.com/in/karthik-vallabhaneni-05b07733b?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app'}><Linkedin className=" w-5 h-full" /></Link> */}
-              
-
+              <Link href={'https://wa.me/8179987444'}><WhatsappIcon className=" w-5 h-full" /></Link>
             </div>
-          </div>
+           </div>
 
         </div>
       </div>

@@ -15,8 +15,9 @@ import {
 } from "@/components/ui/table";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import axios from "axios";
+import Navbar from "@/components/MobileNavbar";
 
 interface Order {
   _id: string;
@@ -212,17 +213,29 @@ export default function Dashboard() {
     fetchOrders();
   }, []);
 
+
   const handleSignout = async () => {
     try {
+      // Show loading toast
+      const loadingToast = toast.loading("Logging out...");
+  
       // Clear tokens from cookies (via API)
       await fetch("/api/auth/signout", { method: "POST" });
-
+  
+      // Dismiss the loading toast and show success message
+      toast.dismiss(loadingToast);
+      toast.success("Logged out successfully!");
+  
       // Redirect to the login page
       router.push("/signin");
     } catch (err) {
+      // Dismiss loading toast and show error message
+      toast.dismiss();
+      toast.error("Error logging out. Please try again.");
       console.error("Error logging out:", err);
     }
   };
+  
 
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -260,6 +273,9 @@ export default function Dashboard() {
 
   return (
     <div className="flex min-h-screen">
+
+      <Navbar />
+      <ToastContainer position="top-center" autoClose={3000} />
       {/* Sidebar */}
       <div className="w-64 bg-black fixed h-full  md:block hidden  text-white p-6">
         <div className="mb-8">
@@ -297,7 +313,7 @@ export default function Dashboard() {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 bg-gray-100 md:ml-64">
+      <div className="flex-1 bg-gray-100 md:ml-64 mt-20 md:mt-0">
         {/* Header */}
         <div className=" p-4 ">
           <header className="bg-[#afafaf] rounded-[10px] p-4 flex justify-between items-center">

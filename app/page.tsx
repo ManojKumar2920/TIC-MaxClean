@@ -82,6 +82,7 @@ const Hero = () => {
     </div>
   );
 };
+
 const Steps = () => {
   const { ref: sectionRef, inView: sectionInView } = useInView({
     triggerOnce: true,
@@ -176,6 +177,7 @@ const Steps = () => {
     </section>
   );
 };
+
 const ThridSection = () => {
   return (
     <div className=" bg-black   py-10       h-screen   flex flex-col items-center justify-center">

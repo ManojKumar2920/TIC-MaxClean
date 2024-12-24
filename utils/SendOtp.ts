@@ -1,5 +1,4 @@
 import nodemailer from "nodemailer";
-import axios from "axios";
 
 // Function to send OTP via email (using Nodemailer)
 export async function sendEmailOtp(email: string, otp: string) {
@@ -14,13 +13,13 @@ export async function sendEmailOtp(email: string, otp: string) {
   const mailOptions = {
     from: process.env.NODE_MAILER_ID,
     to: email,
-    subject: "Email OTP Verification",
+    subject: "MaxClean - Email OTP Verification",
     html: `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Email OTP Verification</title>
+  <title>MaxClean - Email OTP Verification</title>
   <style>
     body {
       font-family: 'Arial', sans-serif;
@@ -131,10 +130,7 @@ export async function sendEmailOtp(email: string, otp: string) {
 
       <div class="otp-box">
         <span id="otp">${otp}</span>
-        <button class="copy-btn" onclick="copyToClipboard('${otp}')">
-          <img src="https://img.icons8.com/ios-filled/50/ffffff/copy.png" alt="Copy Icon" />
-
-        </button>
+        
       </div>
 
       <p>If you did not request this, please ignore this email. For support, contact us at <a href="mailto:maxcleanbusiness@gmail.com">maxcleanbusiness@gmail.com</a>.</p>
@@ -149,16 +145,6 @@ export async function sendEmailOtp(email: string, otp: string) {
     </div>
   </div>
 
-  <!-- JavaScript -->
-  <script>
-    function copyToClipboard(otp) {
-      navigator.clipboard.writeText(otp).then(function() {
-        alert('OTP copied to clipboard!');
-      }).catch(function(err) {
-        alert('Failed to copy OTP. Please try again.');
-      });
-    }
-  </script>
 </body>
 </html>
 `,
@@ -166,23 +152,3 @@ export async function sendEmailOtp(email: string, otp: string) {
 
   await transporter.sendMail(mailOptions);
 }
-
-// export async function sendPhoneOtp(phoneNumber: string, otp: string) {
-//   const apiKey = process.env.TWOFACTOR_API_KEY; // Replace with your 2Factor API Key
-
-//   // API endpoint for sending OTP
-//   const url = `https://2factor.in/API/V1/${apiKey}/SMS/${phoneNumber}/${otp}/OTP_MESSAGE`;
-
-//   try {
-//     // Send OTP using 2Factor API
-//     const response = await axios.get(url);
-
-//     if (response.data.Status === "Success") {
-//       console.log("Phone OTP sent successfully");
-//     } else {
-//       console.log("Failed to send OTP:", response.data);
-//     }
-//   } catch (error) {
-//     console.error("Error sending OTP:", error);
-//   }
-// }

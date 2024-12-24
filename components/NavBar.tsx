@@ -80,7 +80,7 @@ const Navbar = () => {
             </Link>
           ) : (
             <Link
-            href={'/dashboard'}
+            href={'/order-history'}
               className="text-black bg-transparent border-black border-2 whitespace-nowrap rounded-[8px] px-5 py-2"
             >
               Order History

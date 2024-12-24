@@ -1,3 +1,4 @@
+"use client"
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
@@ -27,6 +28,8 @@ const Navbar = () => {
 
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const location = usePathname();
+
+  console.log("The location is "+location);
 
   const router = useRouter();
 
@@ -62,9 +65,9 @@ const Navbar = () => {
         {/* Hamburger Icon for mobile */}
         <div className="lg:hidden ml-6 flex items-center" onClick={toggleMenu}>
           <div className="w-8 h-8 flex flex-col justify-around items-center space-y-1 cursor-pointer">
-            <div className="w-full h-1 bg-white"></div>
-            <div className="w-full h-1 bg-white"></div>
-            <div className="w-full h-1 bg-white"></div>
+            <div className={`w-full h-1 ${location === '/schedule' || location === '/order-history' || location === '/terms' || location === '/privacy' ? 'bg-black' : 'bg-white'}`}></div>
+            <div className={`w-full h-1 ${location === '/schedule' || location === '/order-history' || location === '/terms' || location === '/privacy' ? 'bg-black' : 'bg-white'}`}></div>
+            <div className={`w-full h-1 ${location === '/schedule' || location === '/order-history' || location === '/terms' || location === '/privacy' ? 'bg-black' : 'bg-white'}`}></div>
           </div>
         </div>
       </div>
@@ -148,10 +151,10 @@ const Navbar = () => {
               </Link>
             ) : (
               <Link
-                href={"/dashboard"}
+                href={"/order-history"}
                 className="text-white font-semibold uppercase hover:text-gray-600"
               >
-                Dashboard
+                Order History
               </Link>
             )}
           </div>

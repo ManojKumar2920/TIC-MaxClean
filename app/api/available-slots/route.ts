@@ -35,7 +35,7 @@ const generateNextWeekDates = (): string[] => {
     const date = today.clone().add(i, "days");
     
     // Skip days when business is closed (optional)
-    if (date.day() !== 0 && date.day() !== 6) {
+    if (date.day() !== 3) {
       dates.push(date.format("YYYY-MM-DD"));
     }
   }
