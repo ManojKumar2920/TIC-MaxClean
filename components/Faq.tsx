@@ -7,24 +7,24 @@ const Faq = () => {
       {
         question: "How can I get the best deal on car services for my vehicle?",
         answer:
-          "You can check for offers and promotions on the Maxclean website or app.",
+          "To be updated and get the best deals regarding car wash and other services, do follow us on Instagram, X and other social media platforms",
       },
       {
         question:
           "Will I know the cost upfront before booking a service with Maxclean?",
         answer:
-          "Yes, Maxclean provides a detailed estimate before confirming your booking.",
+          "Yes! Being transparent with pricing and services is in our DNA. Check out our pricing page for more details regarding available services and prices",
       },
       {
         question:
-          "How quickly can I diagnose an unknown issue with my car using Maxclean?",
+          "How much time will it take to get my car washed?",
         answer:
-          "Maxclean offers quick diagnostics through its app and website for faster assistance.",
+          "Typically 45 minutes - 75 minutes based on the size of the car. Most hatchbacks take 45 minutes, sedans/mini SUV’s take around 60 minutes, SUV’s, MUV’s and minivans take 75 minutes",
       },
       {
-        question: "Can I request repairs through the Maxclean website?",
+        question: "Does Maxclean come fully equipped with water and electricity?",
         answer:
-          "Yes, you can schedule repairs directly through the Maxclean website or app.",
+          "Yes!! We get our own water and electricity for the best car wash experience for the customer",
       },
     ];
   

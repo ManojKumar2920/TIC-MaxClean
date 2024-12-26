@@ -1257,7 +1257,7 @@ export default function Dashboard() {
                     currentOrders.map((order) => (
                       <TableRow key={order._id}>
                         <TableCell className="p-4">{order.service}</TableCell>
-                        <TableCell>${order.price}</TableCell>
+                        <TableCell>₹{order.price}</TableCell>
                         <TableCell>{order.name}</TableCell>
                         <TableCell>
                           {new Date(order.createdAt).toLocaleDateString()}

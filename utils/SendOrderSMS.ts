@@ -37,7 +37,6 @@ export const sendOrderSMS = async (
         var6: razorpayOrderId,
         var7: phone,
         var8: address,
-    message: smsContent,
   });
 
   const config: AxiosRequestConfig = {

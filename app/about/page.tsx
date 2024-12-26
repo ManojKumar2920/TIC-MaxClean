@@ -20,9 +20,9 @@ const About = () => {
     <div className="w-full overflow-hidden flex flex-col items-center justify-center">
       <Navbar />
       <MobileBav />
-      <Hero />
-      <Vision />
+      {/* <Hero /> */}
       <WhatWeDo />
+      <Vision />
 
       <Footer />
     </div>
@@ -96,12 +96,16 @@ const Vision = () => {
         <h1 className="text-6xl md:text-[80px]">
           Our <span className="text-[#FF0000]">Vision</span>
         </h1>
-        <p className="md:text-[32px] text-xl text-[#191818]">
+        {/* <p className="md:text-[32px] text-xl text-[#191818]">
           We strive to redefine car care by focusing on
-        </p>
+        </p> */}
       </div>
       <div className="flex mt-6 flex-col flex-wrap md:flex-row md:items-start items-center justify-center py-4 gap-10">
-        {/* Card 1 */}
+
+        <p className=" px-20 font-bold  text-xl">
+        Our primary objective is to establish and maintain the trust of our customers, recognizing it as our foremost goal. Through our unwavering commitment to earning this trust, we strive to deliver exceptional service that goes beyond expectations. We believe that by consistently prioritizing customer trust and providing outstanding service, we can build enduring relationships and foster satisfaction among those we serve.
+        </p>
+{/*         
         <motion.div
           className="flex flex-col gap-4 w-[90%] md:w-[25%]"
           variants={fadeIn}
@@ -123,7 +127,7 @@ const Vision = () => {
           </div>
         </motion.div>
 
-        {/* Card 2 */}
+        
         <motion.div
           className="flex flex-col gap-4 w-[90%] md:w-1/4"
           variants={fadeIn}
@@ -145,7 +149,7 @@ const Vision = () => {
           </div>
         </motion.div>
 
-        {/* Card 3 */}
+        
         <motion.div
           className="flex flex-col gap-4 w-[90%] md:w-1/4"
           variants={fadeIn}
@@ -165,7 +169,7 @@ const Vision = () => {
               it leaves our care with a pristine, lasting shine.
             </h2>
           </div>
-        </motion.div>
+        </motion.div> */}
       </div>
     </div>
   );
@@ -173,7 +177,7 @@ const Vision = () => {
 
 const WhatWeDo = () => {
   return (
-    <div className="relative z-[150]  w-full bg-[#D70006] h-screen">
+    <div className="relative z-[150] pt-20  w-full bg-[#D70006] h-screen">
       {/* Background Shadow */}
       <div
         className="absolute inset-0 bg-shadow-image z-[50] bg-cover bg-center"
@@ -181,39 +185,21 @@ const WhatWeDo = () => {
       ></div>
 
       {/* Car Image */}
-      <div className="absolute z-[30]  hidden md:flex items-center justify-center ">
-        <img src={car.src} alt="Car" className=" w-full  object-contain" />
+      <div className="absolute top-0 z-[30]">
+        <img src={car.src} alt="Car" className=" w-full object-cover h-[100dvh] w-screen" />
       </div>
       <div className=" py-16 w-full flex flex-col md:items-center md:justify-center px-4   md:mt-0 mt-20 md:px-0 absolute z-[160]">
         <h1 className=" text-3xl md:text-[60px]   text-white">What we do ?</h1>
-        <div className="  md:pl-40    flex justify-center gap-10 py-4 md:py-20 items-start">
+        <div className="  flex justify-center gap-10 py-4 md:py-20 items-center px-20">
           <div className=" flex flex-col gap-4">
-            <h1 className=" text-white text-xl    md:text-4xl whitespace-nowrap font-semibold">
+            {/* <h1 className=" text-white text-xl    md:text-4xl whitespace-nowrap font-semibold">
               Interior & Exterior Detailing
-            </h1>
-            <p className=" text-[#FFDBDC]/90  text-xl">
-              We meticulously clean and polish every surface, inside and out,
-              for a fresh and rejuvenated feel. From upholstery to wheels, no
-              detail is overlooked.
+            </h1> */}
+            <p className=" text-white font-bold  text-xl">
+            At our mobile car wash service, we bring the convenience of a pristine vehicle directly to your doorstep. Our dedicated team of professionals utilizes latest techniques to deliver a thorough and efficient car washing experience. From exterior detailing that restores your vehicle's shine to interior cleaning that leaves every nook spotless, we cater to your car's specific needs. With our commitment to quality, time efficiency, and environmental responsibility, we ensure your car not only looks its best but also receives care that aligns with modern standards. Experience the ease of a superior mobile car wash that transforms your car into a symbol of cleanliness and sophistication.
             </p>
           </div>
-          <div className="md:flex hidden  items-end space-x-5 overflow-hidden">
-            {/* Image with Black Overlay */}
-            <div className="relative w-1/3">
-              <img src={card.src} className="w-full" alt="" />
-              <div className="absolute inset-0  rounded-xl"></div>
-            </div>
-
-            <div className="relative w-1/4">
-              <img src={card.src} className="w-full" alt="" />
-              <div className="absolute inset-0 bg-black rounded-xl opacity-50"></div>
-            </div>
-
-            <div className="relative w-1/4">
-              <img src={card.src} className="w-full" alt="" />
-              <div className="absolute inset-0 bg-black rounded-xl opacity-50"></div>
-            </div>
-          </div>
+         
         </div>
       </div>
     </div>

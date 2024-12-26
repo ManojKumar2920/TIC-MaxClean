@@ -41,13 +41,11 @@ export default function Home() {
       loop
       muted
       playsInline
+      webkit-playsinline="true"
+      x5-playsinline="true"
       poster={Banner.src}
       className="absolute inset-0 h-full w-full object-cover"
     >
-      <source
-        src="https://ik.imagekit.io/7da6fpjdo/Maxclean.webm/ik-video.mp4?updatedAt=1733564402262"
-        type="video/webm"
-      />
       <source
         src="https://ik.imagekit.io/7da6fpjdo/Maxclean.webm/ik-video.mp4?updatedAt=1733564402262"
         type="video/mp4"
@@ -182,10 +180,10 @@ const ThridSection = () => {
   return (
     <div className=" bg-black   py-10       h-screen   flex flex-col items-center justify-center">
       <div className=" flex  md:-mt-10 mt-20   items-center md:px-0 px-20 w-screen  justify-center">
-        <img src={eyeleft.src} className="  md:w-1/3 h-full" alt="" />
-        <img src={eyeright.src} className=" md:w-1/3 h-full" alt="" />
+        {/* <img src={eyeleft.src} className="  md:w-1/3 h-full" alt="" />
+        <img src={eyeright.src} className=" md:w-1/3 h-full" alt="" /> */}
       </div>
-      <div className=" text-center absolute   md:px-0 px-2 md:mt-20">
+      <div className=" text-center   md:px-0 px-2 md:mt-20">
         <h1 className=" md:text-[70px] text-4xl text-white md:leading-[80px]">
           We get our own electricity and water{" "}
           <br className="  md:block hidden" />
@@ -195,7 +193,7 @@ const ThridSection = () => {
         </h1>
       </div>
       <Link href={"/schedule"}> 
-      <div className="    mt-32 flex items-center justify-center text-center md:rounded-[2px] rounded-lg overflow-hidden">
+      <div className="  pt-[70px] flex items-center justify-center text-center md:rounded-[2px] rounded-lg overflow-hidden">
         <button className="bg-[#D70006] text-white w-[80%] px-5 py-3  font-semibold overflow-hidden">
           SCHEDULE WASH
         </button>
@@ -216,31 +214,31 @@ const Testmonials = () => {
   const testimonials = [
     {
       rating: 5,
-      title: "Quick and big Savings!",
-      text: "Maxclean Diagnose My Issue feature is a game-changer. Identify problems in minutes and save both time and money. User-friendly and revolutionary.",
+      title: "Amazing Job!",
+      text: "Max clean did an amazing job with foam cleaning for my car. The team was professional, efficient, and exceeded my expectations. I highly recommend them.",
       author: "TechCarGeek",
-      date: "12/10/2022",
+      date: "27/06/2024",
     },
     {
       rating: 5,
       title: "Amazing Support!",
       text: "The customer support team is fantastic. They resolved my issue promptly and went above and beyond to help. Highly recommended.",
       author: "CarEnthusiast",
-      date: "01/15/2023",
+      date: "22/11/2024",
     },
     {
       rating: 5,
-      title: "Efficient and Reliable!",
-      text: "This tool saved me hours of troubleshooting. It's intuitive and delivers results quickly. A must-have for professionals.",
+      title: "Professional and Punctual!",
+      text: "Convenient and on time! MAXCLEAN sent a professional to my location with in no time when I called them and they cleaned every corner of my car in short time!",
       author: "AutoPro",
-      date: "02/20/2023",
+      date: "27/10/2024",
     },
     {
       rating: 5,
       title: "Simply the Best!",
       text: "Maxclean sets the standard for excellence. Reliable, efficient, and easy to use. I can't recommend it enough.",
       author: "GarageGuru",
-      date: "03/10/2023",
+      date: "16/08/2024",
     },
     // Add more testimonials if needed...
   ];
@@ -287,7 +285,7 @@ const Testmonials = () => {
               <p className="md:text-lg  opacity-80">{testimonial.text}</p>
             </div>
             <div>
-              <h1>{testimonial.author}</h1>
+              {/* <h1>{testimonial.author}</h1> */}
               <p>{testimonial.date}</p>
             </div>
           </div>

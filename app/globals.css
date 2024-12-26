@@ -19,11 +19,21 @@
   font-family: 'insta';
   src: url('../assets/inst.ttf') format('truetype');
 }
+
+@font-face{
+  font-family: 'helvetica';
+  src: url('../assets/Helvetica.ttf') format('truetype');
+}
+
 .insta{
   font-family: 'insta';
 }
 body{
   font-family: 'insta';
+}
+
+.helvetica{
+  font-family: 'Helvetica';
 }
 
  

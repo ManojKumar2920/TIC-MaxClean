@@ -287,11 +287,11 @@ export default function Dashboard() {
         </div>
         <nav className="space-y-4">
           <Link
-            href="/dashboard"
+            href="/order-history"
             className="flex items-center space-x-2 bg-white/10 text-white rounded-lg p-3"
           >
             <div className="w-5 h-5 rounded-full border-2 border-red-500" />
-            <span>Dashboard</span>
+            <span>Order History</span>
           </Link>
           {/* <Link
             href="#"
@@ -328,14 +328,14 @@ export default function Dashboard() {
               <Button variant="ghost" size="icon">
                 <Bell className="w-5 h-5" />
               </Button> */}
-              <div onClick={handleAvatarClick} className="cursor-pointer">
+              {/* <div onClick={handleAvatarClick} className="cursor-pointer">
                 <img
                   src="https://avatar.iran.liara.run/public/28"
                   width={40}
                   height={40}
                   alt=""
                 />
-              </div>
+              </div> */}
             </div>
           </header>
         </div>
@@ -376,9 +376,9 @@ export default function Dashboard() {
                   <Filter className="w-4 h-4 mr-2" />
                   Filter
                 </Button> */}
-                <Button variant="outline" size="sm" onClick={exportToCSV}>
+                {/* <Button variant="outline" size="sm" onClick={exportToCSV}>
                   Export
-                </Button>
+                </Button> */}
               </div>
             </div>
             <div>
@@ -400,7 +400,7 @@ export default function Dashboard() {
                     currentOrders.map((order) => (
                       <TableRow key={order._id}>
                         <TableCell className="p-4">{order.service}</TableCell>
-                        <TableCell>${order.price}</TableCell>
+                        <TableCell>₹{order.price}</TableCell>
                         <TableCell>{order.name}</TableCell>
                         <TableCell>
                           {new Date(order.createdAt).toLocaleDateString()}

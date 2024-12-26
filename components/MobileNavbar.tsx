@@ -57,8 +57,10 @@ const Navbar = () => {
           transition={{ duration: 1.5, ease: "easeOut" }}
           className="flex items-center space-x-3"
         >
-          <Link href="/" className=" w-1/2 ">
-            <img src={logo.src} alt="logo" className="w-full h-full" />
+         <Link href={"/"}>
+            <h1 className="text-2xl font-bold helvetica">
+              MAX<span className="text-red-500">CLEAN</span>
+            </h1>
           </Link>
         </motion.div>
 

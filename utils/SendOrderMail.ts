@@ -115,7 +115,7 @@ export const sendOrderMail = async (
         <p><strong>Order ID:</strong> ${razorpayOrderId}</p>
         <p><strong>Service:</strong> ${service}</p>
         <p><strong>Price:</strong> ₹${price}</p>
-        <p><strong>Date:</strong> ₹${date}</p>
+        <p><strong>Date:</strong> ${date}</p>
         <p><strong>Time Slot:</strong> ${timeSlot}</p>
       </div>
 

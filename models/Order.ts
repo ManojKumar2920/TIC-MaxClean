@@ -23,12 +23,10 @@ interface IOrder extends Document {
 
 // Define a mapping of services to their respective prices
 const servicePrices: { [key: string]: string } = {
-  "Car foam wash": "649",
-  "Bike foam wash": "449",
+  "Car foam wash": "679",
   "Car + Bike combo": "899",
-  "Bi Weekly": "1099",
-  "Weekly": "2099",
-  "Battery jump start": "349",
+  "Bi Weekly": "1199",
+  "Weekly": "2199",
 };
 
 

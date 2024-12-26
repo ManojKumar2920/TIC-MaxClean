@@ -16,7 +16,7 @@ const Pricing = () => {
       <MobileNav />
       <Hero isYearly={isYearly} setIsYearly={setIsYearly} />
       {isYearly ? <PricingCard /> : <PricingCard2 />}
-      <Faq />
+      {/* <Faq /> */}
       <GetDemo />
       <Footer />
     </div>
@@ -42,7 +42,8 @@ const Hero: React.FC<HeroProps> = ({ isYearly, setIsYearly }) => {
             for a spotless ride
           </h1>
           <h2 className="text-center text-xl text-white/80">
-            Keep your car and bike spotless and shining with our premium wash services. <br />
+            Keep your car and bike spotless and shining with our premium wash
+            services. <br />
             We offer flexible plans to suit every need and budget.
           </h2>
         </div>
@@ -56,7 +57,7 @@ const Hero: React.FC<HeroProps> = ({ isYearly, setIsYearly }) => {
               checked={isYearly}
               onChange={() => setIsYearly((prev) => !prev)}
             />
-            <div className="relative w-12 h-7 bg-white rounded-full peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-red-600/0 peer dark:bg-white peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-red-600 after:content-[''] after:absolute after:top-[4px] after:start-[4px] after:bg-gray-200 after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-white peer-checked:bg-[#D70006]"></div>
+            <div className="relative w-12 h-7 bg-[#D70006] rounded-full peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-red-600/0 peer dark:bg-[#D70006] peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-red-600 after:content-[''] after:absolute after:top-[4px] after:start-[4px] after:bg-gray-200 after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-white peer-checked:bg-[#D70006]"></div>
           </label>
           <h1>Pay Monthly</h1>
         </div>
@@ -74,11 +75,11 @@ const PricingCard = () => {
       features: [
         "Exterior water wash",
         "Exterior foam wash",
+        "Towel dry cleaning",
         "Interior vacuum",
         "Interior dusting & wiping",
         "Interior mat / carpet cleaning",
         "Glass clean and shine",
-        "Towel dry cleaning",
         "Air top up",
         "Tyre polish",
       ],
@@ -90,11 +91,11 @@ const PricingCard = () => {
       features: [
         "Exterior water wash",
         "Exterior foam wash",
+        "Towel dry cleaning",
         "Interior vacuum",
         "Interior dusting & wiping",
         "Interior mat / carpet cleaning",
         "Glass clean and shine",
-        "Towel dry cleaning",
         "Air top up",
         "Tyre polish",
       ],
@@ -128,7 +129,10 @@ const PricingCard = () => {
                 </li>
               ))}
             </ul>
-            <Link href={"/schedule"} className="absolute bottom-0 w-full left-0 right-0">
+            <Link
+              href={"/schedule"}
+              className="absolute bottom-0 w-full left-0 right-0"
+            >
               <button className="bg-black w-[60%] my-5 text-white rounded px-4 py-2.5">
                 Order Now
               </button>
@@ -149,11 +153,11 @@ const GetDemo = () => {
       </div>
       <div className="relative z-10 text-center">
         <h2 className="text-4xl font-bold mb-4">Schedule a Wash</h2>
-        <p className="text-lg text-white/80 mb-6">
-          Ut aliquip anim laboris deserunt do cillum id amet aute veniam do do.
+        <p className="text-xl text-white/80 mb-6">
+          Book a wash now and see the magic for yourself! Get the #MAXPERIENCE!
         </p>
         <button className="px-6 py-3 bg-white text-[#D70006] rounded-lg font-semibold hover:bg-gray-100 transition">
-          Get demo
+          Book Order
         </button>
       </div>
     </div>
@@ -169,11 +173,11 @@ const PricingCard2 = () => {
       features: [
         "Exterior water wash",
         "Exterior foam wash",
+        "Towel dry cleaning",
         "Interior vacuum",
         "Interior dusting & wiping",
         "Interior mat / carpet cleaning",
         "Glass clean and shine",
-        "Towel dry cleaning",
         "Air top up",
         "Tyre polish",
       ],
@@ -185,11 +189,11 @@ const PricingCard2 = () => {
       features: [
         "Exterior water wash",
         "Exterior foam wash",
+        "Towel dry cleaning",
         "Interior vacuum",
         "Interior dusting & wiping",
         "Interior mat / carpet cleaning",
         "Glass clean and shine",
-        "Towel dry cleaning",
         "Air top up",
         "Tyre polish",
       ],
@@ -223,7 +227,10 @@ const PricingCard2 = () => {
                 </li>
               ))}
             </ul>
-            <Link href={"/schedule"} className="absolute bottom-0 w-full left-0 right-0">
+            <Link
+              href={"/schedule"}
+              className="absolute bottom-0 w-full left-0 right-0"
+            >
               <button className="bg-black w-[60%] my-5 text-white rounded px-4 py-2.5">
                 Order Now
               </button>
