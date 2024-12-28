@@ -90,6 +90,7 @@ const Vision = () => {
     visible: { opacity: 1, y: 0, transition: { duration: 1.8 } },
   };
 
+
   return (
     <div ref={sectionRef} className="py-20 md:px-0 px-10 bg-[#ECEFF3]">
       <div className="text-center">
@@ -102,7 +103,7 @@ const Vision = () => {
       </div>
       <div className="flex mt-6 flex-col flex-wrap md:flex-row md:items-start items-center justify-center py-4 gap-10">
 
-        <p className=" px-20 font-bold  text-xl">
+        <p className=" md:px-20 px-4 font-bold  text-xl ">
         Our primary objective is to establish and maintain the trust of our customers, recognizing it as our foremost goal. Through our unwavering commitment to earning this trust, we strive to deliver exceptional service that goes beyond expectations. We believe that by consistently prioritizing customer trust and providing outstanding service, we can build enduring relationships and foster satisfaction among those we serve.
         </p>
 {/*         
@@ -177,7 +178,7 @@ const Vision = () => {
 
 const WhatWeDo = () => {
   return (
-    <div className="relative z-[150] pt-20  w-full bg-[#D70006] h-screen">
+    <div className="relative z-[8] pt-20  w-full bg-[#D70006] h-screen">
       {/* Background Shadow */}
       <div
         className="absolute inset-0 bg-shadow-image z-[50] bg-cover bg-center"
@@ -186,15 +187,17 @@ const WhatWeDo = () => {
 
       {/* Car Image */}
       <div className="absolute top-0 z-[30]">
-        <img src={car.src} alt="Car" className=" w-full object-cover h-[100dvh] w-screen" />
+        <img src={car.src} alt="Car" className=" w-full object-cover h-[100dvh]" />
       </div>
-      <div className=" py-16 w-full flex flex-col md:items-center md:justify-center px-4   md:mt-0 mt-20 md:px-0 absolute z-[160]">
-        <h1 className=" text-3xl md:text-[60px]   text-white">What we do ?</h1>
-        <div className="  flex justify-center gap-10 py-4 md:py-20 items-center px-20">
+      <div className=" py-2 md:py-16 w-full flex flex-col md:items-center md:justify-center px-4 md:px-0 absolute z-[160]">
+        <h1 className=" text-3xl md:text-[60px] text-white">What we do ?</h1>
+        <div className="  flex justify-center gap-10 px-0 py-4 md:py-20 items-center md:px-20">
+
           <div className=" flex flex-col gap-4">
             {/* <h1 className=" text-white text-xl    md:text-4xl whitespace-nowrap font-semibold">
               Interior & Exterior Detailing
             </h1> */}
+            
             <p className=" text-white font-bold  text-xl">
             At our mobile car wash service, we bring the convenience of a pristine vehicle directly to your doorstep. Our dedicated team of professionals utilizes latest techniques to deliver a thorough and efficient car washing experience. From exterior detailing that restores your vehicle's shine to interior cleaning that leaves every nook spotless, we cater to your car's specific needs. With our commitment to quality, time efficiency, and environmental responsibility, we ensure your car not only looks its best but also receives care that aligns with modern standards. Experience the ease of a superior mobile car wash that transforms your car into a symbol of cleanliness and sophistication.
             </p>
