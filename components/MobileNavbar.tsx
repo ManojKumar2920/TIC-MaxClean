@@ -58,7 +58,7 @@ const Navbar = () => {
           className="flex items-center space-x-3"
         >
          <Link href={"/"}>
-            <h1 className="text-2xl font-bold helvetica">
+            <h1 className="text-2xl font-bold helvetica text-white">
               MAX<span className="text-red-500">CLEAN</span>
             </h1>
           </Link>

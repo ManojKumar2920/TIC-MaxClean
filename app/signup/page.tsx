@@ -156,9 +156,11 @@ const SignupPage = () => {
       />
       <ToastContainer position="top-center" autoClose={3000} />
       <div className="z-10 w-full flex flex-col items-center justify-center max-w-md px-4 py-8">
-        <Link href="/" className="block mb-8 text-center">
-          <Image src={logo} alt="Logo" width={160} height={60} />
-        </Link>
+      <Link href={"/"}>
+            <h1 className="text-4xl font-bold helvetica text-white py-2">
+              MAX<span className="text-red-500">CLEAN</span>
+            </h1>
+          </Link>
         <h1 className="text-3xl md:text-4xl font-semibold text-white text-center mb-6">
           Create Free Account
         </h1>

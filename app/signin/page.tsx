@@ -159,9 +159,11 @@ const Hero = () => {
         className="w-full h-full object-cover -z-[1]"
       />
       <div className="text-center md:scale-100 scale-75 flex flex-col gap-2 mt-4 items-center absolute">
-        <Link href="/">
-          <img src={logo.src} className="md:w-40 w-60" alt="Logo" />
-        </Link>
+      <Link href={"/"}>
+            <h1 className="text-4xl font-bold helvetica text-white">
+              MAX<span className="text-red-500">CLEAN</span>
+            </h1>
+          </Link>
         <div className="mt-4">
           <h1 className="text-4xl md:text-[52px] font-semibold opacity-95">
             Login to Your Account
