@@ -2,15 +2,15 @@ import qs from "qs";
 import axios, { AxiosRequestConfig } from "axios";
 
 export const sendOrderSMS = async (order: {
-  name: string,
-  service: string,
-  price: number,
-  date: string,
-  timeSlot: string,
-  phone: string,
-  address: string,
-  razorpayOrderId: string | undefined
-}): Promise<void> => {
+  name: string;
+  service: string;
+  price: number;
+  date: string;
+  timeSlot: string;
+  phone: string;
+  address: string;
+  razorpayOrderId: string | undefined;
+}, service: any, price: any, date: any, timeSlot: any, phoneNumber: any, address: any, razorpayOrderId: any): Promise<void> => {
   try {
     const data = qs.stringify({
       module: "TRANS_SMS",
