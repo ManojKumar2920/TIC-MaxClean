@@ -18,7 +18,7 @@ interface VerifyAuthResult {
 }
 
 // Utility function to verify user authentication
-async function verifyAuth(): Promise<VerifyAuthResult> {
+export async function verifyAuth(): Promise<VerifyAuthResult> {
   const refreshTokenCookie = (await cookies()).get("refreshToken");
 
   if (!refreshTokenCookie?.value) {
@@ -141,7 +141,6 @@ export async function POST(req: Request) {
       { status: 201 }
     );
   } catch (error) {
-    console.error("Order creation error:", error);
     return NextResponse.json(
       {
         message: "Internal server error.",
@@ -154,11 +153,10 @@ export async function POST(req: Request) {
 
 
 
-export async function GET() {
+export async function GET(req: unknown) {
   try {
     // Ensure database connection
     await connectDB();
-    console.log("Database connected successfully");
 
     // Verify authentication
     const authResult = await verifyAuth();

@@ -87,7 +87,6 @@ export async function GET(req: NextRequest) {
     }
 
   } catch (error) {
-    console.error("Unexpected error in user details route:", error);
 
     return NextResponse.json(
       {

@@ -56,7 +56,7 @@ const filterPastSlotsForToday = (slots: TimeSlot[]): TimeSlot[] => {
   });
 };
 
-export async function GET() {
+export async function GET(req: unknown, res: unknown) {
   try {
     // Connect to the database
     await connectDB();
@@ -105,7 +105,6 @@ export async function GET() {
     return NextResponse.json(availableSlots, { status: 200 });
 
   } catch (error) {
-    console.error("Error fetching available slots:", error);
     return NextResponse.json(
       { 
         message: "Error fetching available slots", 

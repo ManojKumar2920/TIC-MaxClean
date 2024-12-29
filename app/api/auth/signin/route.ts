@@ -143,7 +143,6 @@ export async function POST(req: NextRequest) {
     return response;
 
   } catch (error) {
-    console.error("Sign-In error:", error);
     return NextResponse.json(
       {
         message: "Internal server error",
