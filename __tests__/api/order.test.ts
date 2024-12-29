@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { POST, GET, PATCH, verifyAuth } from '@/app/api/order/route';
+import { POST, GET, PATCH } from '@/app/api/order/route';
 import connectDB from '@/lib/db';
 import Order from '@/models/Order';
 import User from '@/models/User';
@@ -8,6 +8,7 @@ import { verify } from 'jsonwebtoken';
 import { sendAcceptMail } from '@/utils/SendAcceptMail';
 import { sendRejectMail } from '@/utils/SendRejectMail';
 import { sendOntheWayMail } from '@/utils/SendOnTheWayMail';
+import { verifyAuth } from '@/utils/VerifyAuth';
 
 // Mock dependencies
 jest.mock('@/lib/db');

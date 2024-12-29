@@ -18,7 +18,7 @@ interface VerifyAuthResult {
 }
 
 // Utility function to verify user authentication
-export async function verifyAuth(): Promise<VerifyAuthResult> {
+async function verifyAuth(): Promise<VerifyAuthResult> {
   const refreshTokenCookie = (await cookies()).get("refreshToken");
 
   if (!refreshTokenCookie?.value) {
