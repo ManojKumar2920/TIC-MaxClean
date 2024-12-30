@@ -42,6 +42,8 @@ import {
 
 import { Pie } from "react-chartjs-2";
 
+import jsPDF from 'jspdf';
+
 ChartJS.register(ArcElement, ToolTip, Legend, Title);
 
 interface Order {
@@ -146,6 +148,15 @@ export default function Dashboard() {
 
   const updateOrderStatus = async (payload: object) => {
     try {
+      // Find the order that's being updated
+      const order = orders.find((o: any) => o._id === (payload as any).orderId);
+      
+      // Check if order status is already completed
+      if (order?.status === "Completed") {
+        toast.error("Cannot modify a completed order.");
+        return;
+      }
+
       const response = await fetch("/api/order", {
         method: "PATCH",
         headers: {
@@ -184,43 +195,58 @@ export default function Dashboard() {
       return;
     }
 
-    const csvHeaders = [
-      "Order ID",
-      "Name",
-      "Email",
-      "Phone Number",
-      "Payment Status",
-      "Price",
-      "Order Placed At",
-    ];
-
-    const csvRows = filteredOrders.map((order: any) => [
+    // Create table rows for PDF
+    const tableRows = filteredOrders.map((order: any) => [
       order._id,
       order.name,
       order.email,
       order.phoneNumber,
       order.paymentStatus,
+      order.status,
       order.price,
-      order.createdAt,
+      new Date(order.createdAt).toLocaleDateString()
     ]);
+    // Create PDF document
+    const doc = new jsPDF({
+      orientation: 'portrait',
+      unit: 'mm',
+      format: 'a4'
+    });
 
-    const csvContent = [
-      csvHeaders.join(","), // Add header row
-      ...csvRows.map((row) => row.join(",")), // Add data rows
-    ].join("\n");
+    // Add title
+    doc.setFontSize(16);
+    doc.text("Orders Report", 14, 15);
+    doc.setFontSize(10);
 
-    // Create a Blob and trigger download
-    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
-    const url = URL.createObjectURL(blob);
+    // Create table manually
+    let y = 25;
+    const cellHeight = 10;
+    const headers = ["Order ID", "Name", "Email", "Phone", "Payment", "Status", "Price", "Date"];
+    const columnWidths = [35, 25, 35, 20, 20, 20, 15, 20];
+    
+    // Draw headers
+    doc.setFontSize(8);
+    let x = 14;
+    headers.forEach((header, i) => {
+      doc.rect(x, y, columnWidths[i], cellHeight);
+      doc.text(header, x + 2, y + 6);
+      x += columnWidths[i];
+    });
+    
+    // Draw rows
+    y += cellHeight;
+    tableRows.forEach(row => {
+      x = 14;
+      row.forEach((cell, i) => {
+        doc.rect(x, y, columnWidths[i], cellHeight);
+        doc.text(String(cell), x + 2, y + 6);
+        x += columnWidths[i];
+      });
+      y += cellHeight;
+    });
 
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = "orders.csv";
-    link.style.display = "none";
-    document.body.appendChild(link);
-
-    link.click();
-    document.body.removeChild(link);
+    // Save PDF
+    doc.save("orders-report.pdf");
   };
 
   const [chartData, setChartData] = useState<
@@ -1361,16 +1387,38 @@ export default function Dashboard() {
                       </button>
                     </div>
                     <div className="flex flex-col gap-4">
-                      {["Accepted", "Rejected", "OnTheWay", "Completed"].map(
-                        (status) => (
+                      {orders.find((o: any) => o._id === selectedOrderId)?.status === "Completed" ? (
+                        <p className="text-center text-gray-500">Order is already completed</p>
+                      ) : orders.find((o: any) => o._id === selectedOrderId)?.status === "Accepted" ? (
+                        ["OnTheWay", "Completed"].map((status) => (
                           <button
                             key={status}
-                            className=" bg-black text-white whitespace-nowrap rounded-[8px] px-5 py-2"
+                            className="bg-black text-white whitespace-nowrap rounded-[8px] px-5 py-2"
                             onClick={() => handleStatusChange(status)}
                           >
                             {status}
                           </button>
-                        )
+                        ))
+                      ) : orders.find((o: any) => o._id === selectedOrderId)?.status === "OnTheWay" ? (
+                        ["Completed"].map((status) => (
+                          <button
+                            key={status}
+                            className="bg-black text-white whitespace-nowrap rounded-[8px] px-5 py-2"
+                            onClick={() => handleStatusChange(status)}
+                          >
+                            {status}
+                          </button>
+                        ))
+                      ) : (
+                        ["Accepted", "Rejected"].map((status) => (
+                          <button
+                            key={status}
+                            className="bg-black text-white whitespace-nowrap rounded-[8px] px-5 py-2"
+                            onClick={() => handleStatusChange(status)}
+                          >
+                            {status}
+                          </button>
+                        ))
                       )}
                     </div>
                   </Card>

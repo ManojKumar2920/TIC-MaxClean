@@ -7,6 +7,7 @@ import User from "@/models/User";
 import { sendAcceptMail } from "@/utils/SendAcceptMail";
 import { sendRejectMail } from "@/utils/SendRejectMail";
 import { sendOntheWayMail } from "@/utils/SendOnTheWayMail";
+import { sendCompletedMail } from "@/utils/SendCompletedMail";
 
 const REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET as string;
 
@@ -256,6 +257,9 @@ export async function PATCH(req: Request) {
         break;
       case "OnTheWay":
         await sendOntheWayMail( order.name, order.email, order.service, order.price, order.date,order.timeSlot, order.razorpayOrderId);
+        break;
+      case "Completed":
+        await sendCompletedMail( order.name, order.email, order.service, order.price, order.date,order.timeSlot, order.razorpayOrderId);
         break;
       default:
         break; // No email to send for other statuses

@@ -3,10 +3,10 @@ import logo from "@/assets/logo.png";
 import x from "@/assets/x.png";
 import fb from "@/assets/fb.png";
 import insta from "@/assets/insta.png";
+import { BiLogoGmail as MailIcon } from "react-icons/bi";
 import { FaLinkedinIn as Linkedin } from "react-icons/fa6";
 import { BsTwitterX as XIcon } from "react-icons/bs";
 import { FaWhatsapp as WhatsappIcon } from "react-icons/fa";
-import { IoMailOpenOutline as MailIcon } from "react-icons/io5";
 import Link from "next/link";
 
 const Footer = () => {

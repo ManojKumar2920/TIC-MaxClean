@@ -384,11 +384,14 @@ const Booking = () => {
           </div>
           <div className="flex flex-col items-center md:flex-row gap-6 w-full">
             <input
-              type="text"
+              type="tel"
               value={userDetails.phoneNumber}
-              onChange={(e) =>
-                setUserDetails({ ...userDetails, phoneNumber: e.target.value })
-              }
+              onChange={(e) => {
+                if (e.target.value.length <= 10 && /^\d*$/.test(e.target.value)) {
+                  setUserDetails({ ...userDetails, phoneNumber: e.target.value })
+                }
+              }}
+              maxLength={10}
               className="outline-gray-500 rounded-[8px] bg-[#F7F8FA] px-4 py-4 w-[90%] md:w-[50%]"
               placeholder="Mobile Number*"
             />
@@ -416,9 +419,16 @@ const Booking = () => {
               placeholder="Price*"
             />
             <input
-              type="text"
+              type="number"
               value={pincode}
-              onChange={(e) => setPincode(e.target.value)}
+              maxLength={6}
+              max={999999}
+              min={100000}
+              onChange={(e) => {
+                if (e.target.value.length <= 6) {
+                  setPincode(e.target.value)
+                }
+              }}
               className="outline-gray-500 rounded-[8px] bg-[#F7F8FA] px-4 py-4 w-[90%] md:w-[50%]"
               placeholder="Pincode*"
             />
