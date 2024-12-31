@@ -42,8 +42,7 @@ import {
 
 import { Pie } from "react-chartjs-2";
 
-import jsPDF from 'jspdf';
-
+import jsPDF from "jspdf";
 ChartJS.register(ArcElement, ToolTip, Legend, Title);
 
 interface Order {
@@ -66,11 +65,16 @@ interface Order {
   updatedAt: string;
 }
 
+interface ReceiptProps {
+  order: Order;
+}
+
 export default function Dashboard() {
   const router = useRouter();
   const location = usePathname();
 
   const [orders, setOrders] = useState<Order[]>([]);
+  const [orderDetails, setOrderDetails] = useState(null);
   const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null);
   const [metrics, setMetrics] = useState({
     totalRevenue: 0,
@@ -150,7 +154,7 @@ export default function Dashboard() {
     try {
       // Find the order that's being updated
       const order = orders.find((o: any) => o._id === (payload as any).orderId);
-      
+
       // Check if order status is already completed
       if (order?.status === "Completed") {
         toast.error("Cannot modify a completed order.");
@@ -204,13 +208,13 @@ export default function Dashboard() {
       order.paymentStatus,
       order.status,
       order.price,
-      new Date(order.createdAt).toLocaleDateString()
+      new Date(order.createdAt).toLocaleDateString(),
     ]);
     // Create PDF document
     const doc = new jsPDF({
-      orientation: 'portrait',
-      unit: 'mm',
-      format: 'a4'
+      orientation: "portrait",
+      unit: "mm",
+      format: "a4",
     });
 
     // Add title
@@ -221,9 +225,18 @@ export default function Dashboard() {
     // Create table manually
     let y = 25;
     const cellHeight = 10;
-    const headers = ["Order ID", "Name", "Email", "Phone", "Payment", "Status", "Price", "Date"];
+    const headers = [
+      "Order ID",
+      "Name",
+      "Email",
+      "Phone",
+      "Payment",
+      "Status",
+      "Price",
+      "Date",
+    ];
     const columnWidths = [35, 25, 35, 20, 20, 20, 15, 20];
-    
+
     // Draw headers
     doc.setFontSize(8);
     let x = 14;
@@ -232,10 +245,10 @@ export default function Dashboard() {
       doc.text(header, x + 2, y + 6);
       x += columnWidths[i];
     });
-    
+
     // Draw rows
     y += cellHeight;
-    tableRows.forEach(row => {
+    tableRows.forEach((row) => {
       x = 14;
       row.forEach((cell, i) => {
         doc.rect(x, y, columnWidths[i], cellHeight);
@@ -412,6 +425,59 @@ export default function Dashboard() {
 
     return;
   }, []);
+
+  const handleDownloadReceipt = async (orderId: string) => {
+    try {
+      // Fetch the receipt from the correct API endpoint
+      const response = await fetch(`/api/order/${orderId}`, {
+        method: "GET",
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch the receipt");
+      }
+
+      // Get the receipt as a Blob
+      const blob = await response.blob();
+
+      // Create a URL for the Blob and trigger the download
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `receipt-${orderId}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+
+      // Clean up the URL
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(link);
+    } catch (error) {
+      console.error("Error downloading receipt:", error);
+      alert("Failed to download receipt. Please try again.");
+    }
+  };
+
+  // const fetchOrderDetails = async (orderId: string) => {
+  //   try {
+  //     const response = await fetch(`/api/order/${orderId}`);
+  //     if (!response.ok) {
+  //       throw new Error("Failed to fetch order details");
+  //     }
+  //     const data = await response.json();
+  //     return data;
+  //   } catch (error) {
+  //     console.error("Error fetching order details:", error);
+  //     return null;
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   const getOrderDetails = async () => {
+  //     const details = await fetchOrderDetails("676c3eaef060a389fa489077");
+  //     setOrderDetails(details);
+  //   };
+  //   getOrderDetails();
+  // }, []);
 
   useEffect(() => {
     // Filter orders based on the selected time range
@@ -1274,6 +1340,7 @@ export default function Dashboard() {
                     <TableHead>Date</TableHead>
                     <TableHead>Payment</TableHead>
                     <TableHead>Status</TableHead>
+                    <TableHead>Receipt</TableHead>
                     <TableHead className="w-12"></TableHead>
                   </TableRow>
                 </TableHeader>
@@ -1301,6 +1368,7 @@ export default function Dashboard() {
                             {order.paymentStatus}
                           </span>
                         </TableCell>
+
                         <TableCell>
                           <span
                             className={`px-3 py-2 rounded-[6px] text-sm ${
@@ -1317,6 +1385,15 @@ export default function Dashboard() {
                           >
                             {order.status}
                           </span>
+                        </TableCell>
+                        <TableCell>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleDownloadReceipt(order._id)}
+                          >
+                            Download
+                          </Button>
                         </TableCell>
                         <TableCell>
                           <Button
@@ -1387,9 +1464,13 @@ export default function Dashboard() {
                       </button>
                     </div>
                     <div className="flex flex-col gap-4">
-                      {orders.find((o: any) => o._id === selectedOrderId)?.status === "Completed" ? (
-                        <p className="text-center text-gray-500">Order is already completed</p>
-                      ) : orders.find((o: any) => o._id === selectedOrderId)?.status === "Accepted" ? (
+                      {orders.find((o: any) => o._id === selectedOrderId)
+                        ?.status === "Completed" ? (
+                        <p className="text-center text-gray-500">
+                          Order is already completed
+                        </p>
+                      ) : orders.find((o: any) => o._id === selectedOrderId)
+                          ?.status === "Accepted" ? (
                         ["OnTheWay", "Completed"].map((status) => (
                           <button
                             key={status}
@@ -1399,7 +1480,8 @@ export default function Dashboard() {
                             {status}
                           </button>
                         ))
-                      ) : orders.find((o: any) => o._id === selectedOrderId)?.status === "OnTheWay" ? (
+                      ) : orders.find((o: any) => o._id === selectedOrderId)
+                          ?.status === "OnTheWay" ? (
                         ["Completed"].map((status) => (
                           <button
                             key={status}

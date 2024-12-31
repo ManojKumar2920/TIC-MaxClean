@@ -32,6 +32,7 @@ interface Order {
   date: string;
   timeSlot: string;
   notes: string;
+  status: string;
   paymentStatus: string;
   createdAt: string;
   updatedAt: string;
@@ -215,6 +216,38 @@ export default function Dashboard() {
     }
   };
 
+  const handleDownloadReceipt = async (orderId: string) => {
+    try {
+      // Fetch the receipt from the correct API endpoint
+      const response = await fetch(`/api/order/${orderId}`, {
+        method: "GET",
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch the receipt");
+      }
+
+      // Get the receipt as a Blob
+      const blob = await response.blob();
+
+      // Create a URL for the Blob and trigger the download
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `receipt-${orderId}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+
+      // Clean up the URL
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(link);
+    } catch (error) {
+      console.error("Error downloading receipt:", error);
+      alert("Failed to download receipt. Please try again.");
+    }
+  };
+
+
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = userDetails.role === "admin" ? 5 : 10;
   const sortedOrders = [...orders].sort(
@@ -325,6 +358,8 @@ export default function Dashboard() {
                     <TableHead>Ordered by</TableHead>
                     <TableHead>Date</TableHead>
                     <TableHead>Payment</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead>Receipt</TableHead>
                   </TableRow>
                 </TableHeader>
 
@@ -348,6 +383,9 @@ export default function Dashboard() {
                         <TableCell>
                           <Skeleton className="h-8 w-20 rounded-[6px]" />
                         </TableCell>
+                        <TableCell>
+                          <Skeleton className="h-8 w-20 rounded-[6px]" />
+                        </TableCell>
                       </TableRow>
                     ))
                   ) : currentOrders.length > 0 ? (
@@ -363,14 +401,41 @@ export default function Dashboard() {
                           <span
                             className={`px-3 py-2 rounded-[6px] text-sm ${
                               order.paymentStatus === "Pending"
-                                ? "bg-[#FFBA3A] text-black"
+                                ? "border-[#FFBA3A] border-2 text-black"
                                 : order.paymentStatus === "Success"
-                                ? "bg-[#10D899] text-black"
-                                : "bg-[#E5240F] text-black"
+                                ? "border-[#10D899] border-2 text-black"
+                                : "border-[#E5240F] border-2 text-black"
                             }`}
                           >
                             {order.paymentStatus}
                           </span>
+                        </TableCell>
+
+                        <TableCell>
+                          <span
+                            className={`px-3 py-2 rounded-[6px] text-sm ${
+                              order.status === "Pending"
+                                ? "bg-[#FFBA3A] text-black"
+                                : order.status === "Completed"
+                                ? "bg-[#10D899] text-black"
+                                : order.status === "OnTheWay"
+                                ? " bg-[#aee4e3] text-black"
+                                : order.status === "Accepted"
+                                ? "bg-[#10D899] text-black"
+                                : "bg-[#E5240F] text-black"
+                            }`}
+                          >
+                            {order.status}
+                          </span>
+                        </TableCell>
+                        <TableCell>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleDownloadReceipt(order._id)}
+                          >
+                            Download
+                          </Button>
                         </TableCell>
                       </TableRow>
                     ))

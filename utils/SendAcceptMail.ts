@@ -7,7 +7,8 @@ export const sendAcceptMail = async (
     price: number,
     date: string,
     timeSlot: string,
-    razorpayOrderId: string | undefined
+    razorpayOrderId: string | undefined,
+    receipt: Buffer
   ) => {
     const transporter = nodemailer.createTransport({
       service: "gmail",
@@ -19,7 +20,7 @@ export const sendAcceptMail = async (
   
     const mailOptions = {
       from: process.env.NODE_MAILER_ID, // Sender email
-      to: email, // Recipient email
+      to: 'manodev029@gmail.com', // Recipient email
       subject: "Order Accepted - Please Wait for the Washer",
       html: `<!DOCTYPE html>
   <html lang="en">
@@ -133,7 +134,15 @@ export const sendAcceptMail = async (
   </body>
   </html>
   `,
-    };
+  attachments: [
+    {
+      filename: "receipt.pdf", // Name of the attached file
+      content: receipt, // Buffer content of the PDF
+      contentType: "application/pdf",
+    },
+  ],
+
+};
   
     try {
       // Send the email

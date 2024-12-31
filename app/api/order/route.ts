@@ -8,12 +8,12 @@ import { sendAcceptMail } from "@/utils/SendAcceptMail";
 import { sendRejectMail } from "@/utils/SendRejectMail";
 import { sendOntheWayMail } from "@/utils/SendOnTheWayMail";
 import { sendCompletedMail } from "@/utils/SendCompletedMail";
+import { generateReceiptPDF } from "@/utils/GenerateReceipt";
 
 const REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET as string;
 
-
 interface VerifyAuthResult {
-  user?: any;  // Replace 'any' with your User type
+  user?: any; // Replace 'any' with your User type
   error?: string;
   status?: number;
 }
@@ -36,31 +36,31 @@ async function verifyAuth(): Promise<VerifyAuthResult> {
       return { error: "Unauthorized: Invalid token payload.", status: 401 };
     }
 
-    const user = await User.findOne({ email: decoded.email })
-      .select('firstName lastName email role');  // Only select needed fields
-      
+    const user = await User.findOne({ email: decoded.email }).select(
+      "firstName lastName email role"
+    ); // Only select needed fields
+
     if (!user) {
       return { error: "Unauthorized: User not found.", status: 404 };
     }
 
     // Return user without sensitive fields
-    return { 
+    return {
       user: {
         userId: user._id,
         firstName: user.firstName,
         lastName: user.lastName,
         email: user.email,
-        role: user.role
-      }
+        role: user.role,
+      },
     };
-
   } catch (error) {
     if (error instanceof Error) {
       // Provide more specific error messages for token issues
-      if (error.name === 'TokenExpiredError') {
+      if (error.name === "TokenExpiredError") {
         return { error: "Unauthorized: Token has expired.", status: 401 };
       }
-      if (error.name === 'JsonWebTokenError') {
+      if (error.name === "JsonWebTokenError") {
         return { error: "Unauthorized: Invalid token.", status: 401 };
       }
     }
@@ -83,7 +83,7 @@ export async function POST(req: Request) {
       date,
       timeSlot,
       notes,
-      paymentStatus
+      paymentStatus,
     } = await req.json();
 
     // Validate required fields
@@ -95,7 +95,7 @@ export async function POST(req: Request) {
     }
 
     const authResult = await verifyAuth();
-    if ('error' in authResult) {
+    if ("error" in authResult) {
       return NextResponse.json(
         { message: authResult.error },
         { status: authResult.status }
@@ -106,7 +106,7 @@ export async function POST(req: Request) {
       "Car foam wash": 679,
       "Car + Bike combo": 899,
       "Bi Weekly": 1199,
-      "Weekly": 2199,
+      Weekly: 2199,
     };
 
     const price = servicePrices[service];
@@ -130,14 +130,14 @@ export async function POST(req: Request) {
       date,
       timeSlot,
       notes,
-      paymentStatus
+      paymentStatus,
     });
 
     return NextResponse.json(
       {
         message: "Order created successfully.",
         order: newOrder,
-        orderId: newOrder._id.toString(), 
+        orderId: newOrder._id.toString(),
       },
       { status: 201 }
     );
@@ -151,8 +151,6 @@ export async function POST(req: Request) {
     );
   }
 }
-
-
 
 export async function GET(req: unknown) {
   try {
@@ -179,7 +177,9 @@ export async function GET(req: unknown) {
       return NextResponse.json({ orders }, { status: 200 });
     } else {
       // console.log(`Fetching orders for user: ${user.userId}`);
-      const userOrders = await Order.find({ userId: user.userId }).sort({ updatedAt: -1 });
+      const userOrders = await Order.find({ userId: user.userId }).sort({
+        updatedAt: -1,
+      });
       // console.log("User orders fetched:", userOrders);
       return NextResponse.json({ orders: userOrders }, { status: 200 });
     }
@@ -195,7 +195,6 @@ export async function GET(req: unknown) {
   }
 }
 
-
 export async function PATCH(req: Request) {
   try {
     await connectDB();
@@ -210,7 +209,13 @@ export async function PATCH(req: Request) {
       );
     }
 
-    const validStatuses = ["Pending", "Accepted", "OnTheWay", "Completed", "Rejected"];
+    const validStatuses = [
+      "Pending",
+      "Accepted",
+      "OnTheWay",
+      "Completed",
+      "Rejected",
+    ];
     if (!validStatuses.includes(newStatus)) {
       return NextResponse.json(
         { message: "Invalid status provided." },
@@ -247,19 +252,64 @@ export async function PATCH(req: Request) {
     order.status = newStatus;
     await order.save();
 
+    const pdfBuffer = await generateReceiptPDF(order);
+
+    if (newStatus === "Accepted") {
+      order.receipt = pdfBuffer;
+    }
+
+    const receiptBuffer = pdfBuffer;
+
+    await order.save();
+
     // Send email based on the new status
     switch (newStatus) {
       case "Accepted":
-        await sendAcceptMail( order.name, order.email, order.service, order.price, order.date,order.timeSlot, order.razorpayOrderId,);
+        await sendAcceptMail(
+
+          order.name,
+          order.email,
+          order.service,
+          order.price,
+          order.date,
+          order.timeSlot,
+          order.razorpayOrderId,
+          receiptBuffer
+        );
         break;
       case "Rejected":
-        await sendRejectMail( order.name, order.email, order.service, order.price, order.date,order.timeSlot, order.razorpayOrderId ,message);
+        await sendRejectMail(
+          order.name,
+          order.email,
+          order.service,
+          order.price,
+          order.date,
+          order.timeSlot,
+          order.razorpayOrderId,
+          message
+        );
         break;
       case "OnTheWay":
-        await sendOntheWayMail( order.name, order.email, order.service, order.price, order.date,order.timeSlot, order.razorpayOrderId);
+        await sendOntheWayMail(
+          order.name,
+          order.email,
+          order.service,
+          order.price,
+          order.date,
+          order.timeSlot,
+          order.razorpayOrderId
+        );
         break;
       case "Completed":
-        await sendCompletedMail( order.name, order.email, order.service, order.price, order.date,order.timeSlot, order.razorpayOrderId);
+        await sendCompletedMail(
+          order.name,
+          order.email,
+          order.service,
+          order.price,
+          order.date,
+          order.timeSlot,
+          order.razorpayOrderId
+        );
         break;
       default:
         break; // No email to send for other statuses
