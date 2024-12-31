@@ -20,7 +20,7 @@ export const sendAcceptMail = async (
   
     const mailOptions = {
       from: process.env.NODE_MAILER_ID, // Sender email
-      to: 'manodev029@gmail.com', // Recipient email
+      to: email, // Recipient email
       subject: "Order Accepted - Please Wait for the Washer",
       html: `<!DOCTYPE html>
   <html lang="en">
