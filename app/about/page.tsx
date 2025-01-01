@@ -198,7 +198,7 @@ const WhatWeDo = () => {
               Interior & Exterior Detailing
             </h1> */}
             
-            <p className=" text-white font-bold  text-xl">
+            <p className=" text-white font-bold text-lg md:text-xl">
             At our mobile car wash service, we bring the convenience of a pristine vehicle directly to your doorstep. Our dedicated team of professionals utilizes latest techniques to deliver a thorough and efficient car washing experience. From exterior detailing that restores your vehicle's shine to interior cleaning that leaves every nook spotless, we cater to your car's specific needs. With our commitment to quality, time efficiency, and environmental responsibility, we ensure your car not only looks its best but also receives care that aligns with modern standards. Experience the ease of a superior mobile car wash that transforms your car into a symbol of cleanliness and sophistication.
             </p>
           </div>

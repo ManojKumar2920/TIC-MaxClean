@@ -60,7 +60,7 @@ const Faq = () => {
         </div>
         <div className="mt-12  flex border md:gap-0 gap-4   md:flex-row flex-col  border-gray-300/20  rounded-md  md:w-[80%]  px-4   py-4 items-center  justify-between   ">
           <p className="text-black  text-center">
-            Cant find what youre looking for? <br className=" md:block hidden" />
+            Can't find what you're looking for? <br className=" md:block hidden" />
             Contact us here:
           </p>
           <a

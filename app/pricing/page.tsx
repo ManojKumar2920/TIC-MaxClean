@@ -123,9 +123,12 @@ const PricingCard = () => {
             </div>
             <ul className="mt-6 px-6 py-14 bg-[#F5F5F5] space-y-4">
               {plan.features.map((feature, idx) => (
-                <li key={idx} className="flex items-center gap-3">
+                <li
+                  key={idx}
+                  className="flex items-start text-wrap text-start gap-3"
+                >
                   <span className="text-red-600">✔</span>
-                  <span className="text-gray-800">{feature}</span>
+                  <span className="text-gray-800 font-bold">{feature}</span>
                 </li>
               ))}
             </ul>
@@ -146,19 +149,22 @@ const PricingCard = () => {
 
 const GetDemo = () => {
   return (
-    <div className="relative w-[95%] md:w-[90%] rounded-xl py-16 my-20 md:my-40 bg-[#D70006] z-[-1] text-white flex items-center justify-center">
+    <div className="relative w-[95%] md:w-[90%] rounded-xl py-16 my-20 md:my-40 bg-[#D70006]  text-white flex items-center justify-center">
       <div className="absolute inset-0 flex justify-center items-center">
         <div className="absolute md:w-[60%] w-[80%] md:h-screen h-[120%] border-4 border-white/30 rounded-full"></div>
         <div className="absolute md:w-[80%] w-[100%] md:h-screen h-[140%] border-4 border-white/20 rounded-full"></div>
       </div>
-      <div className="relative z-10 text-center">
+      <div className="relative text-center">
         <h2 className="text-4xl font-bold mb-4">Schedule a Wash</h2>
         <p className="text-xl text-white/80 mb-6">
           Book a wash now and see the magic for yourself! Get the #MAXPERIENCE!
         </p>
-        <button className="px-6 py-3 bg-white text-[#D70006] rounded-lg font-semibold hover:bg-gray-100 transition">
+        <Link
+          href="/schedule"
+          className="px-6 py-3 z-10 bg-white text-[#D70006] rounded-lg font-semibold hover:bg-gray-100 transition"
+        >
           Book Order
-        </button>
+        </Link>
       </div>
     </div>
   );
@@ -221,7 +227,10 @@ const PricingCard2 = () => {
             </div>
             <ul className="mt-6 px-6 py-14 bg-[#F5F5F5] space-y-4">
               {plan.features.map((feature, idx) => (
-                <li key={idx} className="flex items-center gap-3">
+                <li
+                  key={idx}
+                  className="flex items-start text-wrap text-start gap-3"
+                >
                   <span className="text-red-600">✔</span>
                   <span className="text-gray-800 font-bold">{feature}</span>
                 </li>

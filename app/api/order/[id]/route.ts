@@ -19,6 +19,13 @@ export async function GET(
       );
     }
 
+    if (order.paymentStatus !== 'Success') {
+      return NextResponse.json(
+        { message: 'Receipt only available for successful payments' },
+        { status: 400 }
+      );
+    }
+
     const pdfBuffer = await generateReceiptPDF(order);
 
     return new NextResponse(pdfBuffer, {

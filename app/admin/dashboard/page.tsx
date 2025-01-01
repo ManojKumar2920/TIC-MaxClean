@@ -426,8 +426,13 @@ export default function Dashboard() {
     return;
   }, []);
 
-  const handleDownloadReceipt = async (orderId: string) => {
+  const handleDownloadReceipt = async (orderId: string, paymentStatus: string) => {
     try {
+      if (paymentStatus !== "Success") {
+        toast.info("Receipt is only available for successful payments");
+        return;
+      }
+
       // Fetch the receipt from the correct API endpoint
       const response = await fetch(`/api/order/${orderId}`, {
         method: "GET",
@@ -456,6 +461,7 @@ export default function Dashboard() {
       alert("Failed to download receipt. Please try again.");
     }
   };
+
 
   // const fetchOrderDetails = async (orderId: string) => {
   //   try {
@@ -1387,12 +1393,12 @@ export default function Dashboard() {
                           </span>
                         </TableCell>
                         <TableCell>
-                          <Button
+                        <Button
                             variant="ghost"
                             size="sm"
-                            onClick={() => handleDownloadReceipt(order._id)}
+                            onClick={(e) => order.paymentStatus === "Success" ? handleDownloadReceipt(order._id, order.paymentStatus) : null}
                           >
-                            Download
+                            {order.paymentStatus === "Success" ? "Download" : "Not Available"}
                           </Button>
                         </TableCell>
                         <TableCell>
