@@ -266,7 +266,6 @@ export async function PATCH(req: Request) {
     switch (newStatus) {
       case "Accepted":
         await sendAcceptMail(
-
           order.name,
           order.email,
           order.service,

@@ -41,10 +41,16 @@ export default function Home() {
       loop
       muted
       playsInline
-      webkit-playsinline="true"
-      x5-playsinline="true"
+      controls={false}
+      preload="auto"
       poster={Banner.src}
       className="absolute inset-0 h-full w-full object-cover"
+      onLoadedMetadata={(e) => {
+        const video = e.target as HTMLVideoElement;
+        video.play().catch(error => {
+          console.log("Auto-play failed:", error);
+        });
+      }}
     >
       <source
         src="https://ik.imagekit.io/7da6fpjdo/Maxclean.webm/ik-video.mp4?updatedAt=1733564402262"
@@ -163,7 +169,7 @@ const Steps = () => {
                 Schedule a Wash
               </h3>
               <p className="text-sm text-left">
-              Choose a convenient time and book your wash in just a few clicks.
+              Hit on schedule wash and relax while we restore your car’s shine!
               </p>
             </div>
           </div>
