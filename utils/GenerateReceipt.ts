@@ -1,5 +1,5 @@
-import puppeteer from 'puppeteer';
-import path from 'path';
+import jsPDF from 'jspdf';
+import "jspdf-autotable";
 
 interface Order {
   _id: string;
@@ -18,181 +18,154 @@ interface Order {
 }
 
 export async function generateReceiptPDF(order: Order): Promise<Buffer> {
-  const htmlContent = `
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Receipt</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-    }
-    .container {
-      max-width: 800px;
-      margin: 40px auto;
-      background: #ffffff;
-      padding: 20px 60px 20px 60px;
-      border-radius: 8px;
-    }
-    .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 2px solid #f0f0f0;
-      padding-bottom: 10px;
-      margin-bottom: 20px;
-    }
-    .header h1 {
-      font-size: 28px;
-      color: #333333;
-      margin: 0;
-    }
-    .header .invoice-info {
-      text-align: right;
-      font-size: 14px;
-      color: #555555;
-    }
-    .customer-info, .order-details, .summary {
-      margin-bottom: 20px;
-    }
-    .customer-info p, .order-details p {
-      margin: 4px 0;
-      font-size: 14px;
-      color: #444444;
-    }
-    .section-title {
-      font-size: 24px;
-      font-weight: bold;
-      margin-bottom: 10px;
-      color: #222222;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 10px;
-    }
-    th, td {
-      text-align: left;
-      padding: 10px;
-      border: 1px solid #ddd;
-      font-size: 14px;
-    }
-    th {
-      background-color: #f4f4f4;
-      font-weight: bold;
-    }
-    .summary {
-      text-align: right;
-    }
-    .summary p {
-      font-size: 14px;
-      margin: 5px 0;
-    }
-    .total {
-      font-size: 32px;
-      font-weight: bold;
-      color: #333333;
-    }
-    .footer {
-      text-align: center;
-      margin-top: 20px;
-      font-size: 14px;
-      color: #777777;
-      border-top: 1px solid #ddd;
-      padding-top: 20px;
-    }
-    .highlight {
-      color: red;
-      font-weight: bold;
-    }
-    .contact-info {
-      margin-top: 15px;
-      font-size: 12px;
-      color: #666;
-      text-align: start;
-      
-    }
+  const doc = new jsPDF();
 
-    .contact-info p a{
-      text-decoration: none;
-      color: #666;
+  // Company Logo/Header
+  doc.setFontSize(24); 
+  doc.setFont('helvetica', 'bold');
+  doc.setTextColor(0, 0, 0); // Black
+  doc.text('MAX', 20, 20);
+  
+  const maxWidth = doc.getTextWidth('MAX');
+  doc.setTextColor(255, 0, 0); // Red
+  doc.text('CLEAN', 20 + maxWidth, 20);
+  
+  // Reset text color to black for remaining content
+  doc.setTextColor(0, 0, 0);
+  
+  // Company Details
+  doc.setFontSize(10);
+  doc.setFont('helvetica', 'normal');
+  doc.text([
+    'MaxClean Professional Services',
+    'Phone: +91-8179987444',
+    'Email: maxcleanbusiness@gmail.com',
+    'Website: www.themaxclean.com'
+  ], 20, 30);
+
+  // Invoice Title and Number
+  doc.setFontSize(16);
+  doc.setFont('helvetica', 'bold');
+  doc.text('INVOICE', 140, 20);
+  doc.setFontSize(10);
+  doc.setFont('helvetica', 'normal');
+  doc.text([
+    `Order id: ${order._id}`,
+    `Date: ${new Date(order.createdAt).toLocaleDateString('en-IN')}`,
+    `Payment Status: ${order.paymentStatus}`
+  ], 140, 30);
+
+  // Add horizontal line after header
+  doc.setDrawColor(200, 200, 200);
+  doc.line(20, 45, 190, 45);
+
+  // Billing Information
+  doc.setFontSize(12);
+  doc.setFont('helvetica', 'bold');
+  doc.text('BILL TO:', 20, 70);
+  
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(10);
+  doc.text([
+    order.name,
+    order.email,
+    order.phoneNumber,
+    `${order.address}`,
+    `${order.landmark}`,
+    `${order.pincode}`
+  ], 20, 80);
+
+  // Service Details
+  doc.setFontSize(12);
+  doc.setFont('helvetica', 'bold');
+  doc.text('SERVICE DETAILS:', 20, 120);
+  
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(10);
+  doc.text([
+    `Service Date: ${order.date}`,
+    `Time Slot: ${order.timeSlot}`
+  ], 20, 130);
+
+  // Create the invoice table
+  const tableData = [
+    [
+      { content: 'DESCRIPTION', styles: { fillColor: [240, 240, 240], textColor: [0, 0, 0], fontStyle: 'bold' } },
+      { content: 'AMOUNT', styles: { fillColor: [240, 240, 240], textColor: [0, 0, 0], fontStyle: 'bold' } }
+    ],
+    [order.service, order.price]
+  ];
+
+  (doc as any).autoTable({
+    startY: 150,
+    head: [tableData[0]],
+    body: [tableData[1]],
+    theme: 'grid',
+    headStyles: { fillColor: [240, 240, 240], textColor: [0, 0, 0] },
+    styles: { fontSize: 10, cellPadding: 5 },
+    columnStyles: {
+      0: { cellWidth: 140 },
+      1: { cellWidth: 30, halign: 'right' }
     }
-
-  </style>
-</head>
-<body>
-  <div class="container ">
-    <div class="header">
-      <div>
-        <h1>MAX<span class="highlight">CLEAN</span></h1>
-        <p>INVOICE</p>
-      </div>
-      <div class="invoice-info">
-        <p>Order ID: ${order._id}</p>
-        <p>Date: ${new Date(order.createdAt || '').toLocaleDateString()}</p>
-      </div>
-    </div>
-    <div class="customer-info">
-      <p class="section-title text-2xl">Customer Information</p>
-      <p><strong>${order.name}</strong></p>
-      <p>${order.email}</p>
-      <p>${order.address},<br> ${order.landmark}, ${order.pincode}</p>
-      <p>${order.phoneNumber}</p>
-    </div>
-    <div class="order-details">
-      <p class="section-title">Order Details</p>
-      <p><strong>Service:</strong> ${order.service}</p>
-      <p><strong>Date:</strong> ${order.date}</p>
-      <p><strong>Time Slot:</strong> ${order.timeSlot}</p>
-      <p><strong>Payment Status:</strong> ${order.paymentStatus}</p>
-    </div>
-    <table>
-      <thead>
-        <tr>
-          <th>SERVICE</th>
-          <th>PRICE</th>
-          <th>TOTAL</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>${order.service}</td>
-          <td>${order.price.toLocaleString()}/-</td>
-          <td>${order.price.toLocaleString()}/-</td>
-        </tr>
-      </tbody>
-    </table>
-    <div class="summary">
-      <p>Sub-total: ${order.price.toLocaleString()}/-</p>
-      <p>Tax: 0</p>
-      <p class="total">Total: ${order.price.toLocaleString()} INR</p>
-    </div>
-    <div class="footer">
-      <p>Thank you for choosing MaxClean!</p>
-      <div class="contact-info">
-        <h2>Contact Us:</h2>
-        <p>Phone: <a href="tel:+91-8179987444">+91-8179987444</a></p>
-        <p>Email: <a href="mailto:maxcleanbusiness@gmail.com">maxcleanbusiness@gmail.com</a></p>
-        <p>Website: <a href="https://themaxclean.com">www.themaxclean.com</a></p>
-      </div>
-    </div>
-  </div>
-</body>
-</html>
-  `;
-
-  const browser = await puppeteer.launch();
-  const page = await browser.newPage();
-  await page.setContent(htmlContent, { waitUntil: 'networkidle0' });
-  const pdfBuffer = await page.pdf({
-    format: 'A4',
-    printBackground: true,
   });
-  await browser.close();
 
-  return Buffer.from(pdfBuffer);
+  // Calculate final amounts
+  const subtotal = order.price;
+  const tax = 0;
+  const total = subtotal ;
+
+  // Add summary section with proper formatting
+  const summaryStartY = (doc as any).autoTable.previous.finalY + 20;
+  
+  // Add a light gray background for the summary section
+  doc.setFillColor(248, 248, 248);
+  doc.rect(130, summaryStartY - 10, 60, 25, 'F');
+
+  doc.setFontSize(11);
+  doc.setFont('helvetica', 'normal');
+  doc.text([
+    `Subtotal:`,
+    `Tax:`,
+    `Total:`
+  ], 140, summaryStartY);
+
+  // Align amounts to the right with proper currency formatting
+  doc.text([
+    subtotal.toLocaleString('en-IN'),
+    tax.toLocaleString('en-IN'),
+    total.toLocaleString('en-IN')
+  ], 170, summaryStartY, { align: 'right' });
+
+  // Add bottom border line
+  doc.setDrawColor(200, 200, 200);
+  doc.line(20, 270, 190, 270);
+
+  // Footer with colored MaxClean
+  doc.setFontSize(8);
+  const thankYouText = 'Thank you for choosing ';
+  const footerX = 105;
+  const footerY = 280;
+  
+  // Calculate positions for centered text
+  const thankYouWidth = doc.getTextWidth(thankYouText);
+  const maxWidth2 = doc.getTextWidth('Max');
+  const cleanWidth = doc.getTextWidth('Clean');
+  const totalWidth = thankYouWidth + maxWidth2 + cleanWidth;
+  const startX = footerX - (totalWidth / 2);
+  
+  // Write footer text in parts with different colors
+  doc.setTextColor(100, 100, 100);
+  doc.text(thankYouText, startX, footerY);
+  doc.setTextColor(0, 0, 0);
+  doc.text('Max', startX + thankYouWidth, footerY);
+  doc.setTextColor(255, 0, 0);
+  doc.text('Clean!', startX + thankYouWidth + maxWidth2, footerY);
+  
+  // Reset color and add contact line
+  doc.setTextColor(100, 100, 100);
+  doc.text('For any queries, please contact our customer support.', 105, footerY + 8, { align: 'center' });
+
+  // Convert to Buffer
+  const pdfOutput = doc.output('arraybuffer');
+  return Buffer.from(pdfOutput);
 }
