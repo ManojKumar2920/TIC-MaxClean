@@ -43,7 +43,7 @@ export const sendOntheWayMail = async (
       box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     }
     .header {
-      background-color: #d70006;
+      background-color: #000000;
       color: #ffffff;
       text-align: center;
       padding: 20px;

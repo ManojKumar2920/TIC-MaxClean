@@ -170,6 +170,7 @@ const Steps = () => {
               </h3>
               <p className="text-sm text-left">
               Hit on schedule wash and relax while we restore your car’s shine!
+
               </p>
             </div>
           </div>
