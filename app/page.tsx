@@ -106,7 +106,23 @@ const Video: React.FC<VideoProps> = ({ posterSrc }) => {
         muted
         playsInline
         controls={false}
-        preload="auto"
+        preload="none"
+        onLoadedMetadata={(e) => {
+          const video = e.target as HTMLVideoElement;
+          try {
+            video.play();
+          } catch (error) {
+            console.error("Failed to play video:", error);
+          }
+        }}
+        onLoadedData={(e) => {
+          const video = e.target as HTMLVideoElement;
+          try {
+            video.play();
+          } catch (error) {
+            console.error("Failed to play video:", error);
+          }
+        }}
         poster={posterSrc}
         className="w-screen h-screen object-cover"
         style={{
@@ -131,6 +147,8 @@ const Video: React.FC<VideoProps> = ({ posterSrc }) => {
     </div>
   );
 };
+
+
 
 const Hero = () => {
   return (
