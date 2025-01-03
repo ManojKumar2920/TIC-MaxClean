@@ -2,7 +2,7 @@
 
 
 "use client";
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Navbar from "@/components/NavBar";
 import Banner from "@/assets/Banner.png";
 import one from "@/assets/home1.png";
@@ -34,55 +34,108 @@ export default function Home() {
   );
 };
  
- const Video: React.FC = () => {
-  React.useEffect(() => {
-    const video = document.getElementById("backgroundVideo") as HTMLVideoElement;
+interface VideoProps {
+  posterSrc: string;
+}
 
-    const playVideo = () => {
-      if (video) {
-        video.play().catch((error) => {
-          console.error("Auto-play was prevented:", error);
-        });
+const Video: React.FC<VideoProps> = ({ posterSrc }) => {
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    // Function to force play video
+    const forcePlay = async () => {
+      try {
+        // Set volume to 0 first
+        video.volume = 0;
+        video.muted = true;
+        
+        // Force load the video
+        await video.load();
+        
+        // Attempt to play
+        await video.play();
+        
+        console.log('Video started playing');
+      } catch (error) {
+        console.error('Autoplay failed:', error);
       }
     };
 
-    playVideo();
+    // Initial play attempt
+    forcePlay();
 
-    document.body.addEventListener(
-      "touchstart",
-      function () {
-        playVideo();
-      },
-      { once: true }
-    );
+    // Add interaction handlers for iOS
+    const playOnInteraction = () => {
+      if (video.paused) {
+        forcePlay();
+      }
+    };
+
+    // Add multiple event listeners for different scenarios
+    const interactionEvents = ['touchstart', 'touchend', 'click', 'scroll'];
+    interactionEvents.forEach(event => {
+      document.addEventListener(event, playOnInteraction, { once: true });
+    });
+
+    // Handle visibility change
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        forcePlay();
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    // Cleanup
+    return () => {
+      interactionEvents.forEach(event => {
+        document.removeEventListener(event, playOnInteraction);
+      });
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
   }, []);
 
   return (
-    <video
-      id="backgroundVideo"
-      autoPlay
-      loop
-      muted
-      playsInline
-      controls={false}
-      preload="auto"
-      poster={Banner.src}
-      className="absolute inset-0 h-full w-full object-cover"
-    >
-      <source
-        src="https://ik.imagekit.io/7da6fpjdo/Maxclean.webm/ik-video.mp4?updatedAt=1733564402262"
-        type="video/mp4"
-      />
-      Your browser does not support the video tag.
-    </video>
+    <div className="absolute inset-0 w-full h-full overflow-hidden">
+      <video
+        ref={videoRef}
+        autoPlay
+        loop
+        muted
+        playsInline
+        controls={false}
+        preload="auto"
+        poster={posterSrc}
+        className="w-screen h-screen object-cover"
+        style={{
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          minWidth: '100%',
+          minHeight: '100%',
+        }}
+        webkit-playsinline="true"
+        x-webkit-airplay="allow"
+        disablePictureInPicture
+        disableRemotePlayback
+      >
+        <source
+          src="https://ik.imagekit.io/7da6fpjdo/Maxclean.webm/ik-video.mp4?updatedAt=1733564402262"
+          type="video/mp4"
+        />
+        Your browser does not support the video tag.
+      </video>
+    </div>
   );
 };
-
 
 const Hero = () => {
   return (
     <div className="relative insta h-screen w-screen flex items-center px-10 text-white">
-      <Video />
+      <Video posterSrc={Banner.src} />
       <div className=" z-10 flex flex-col gap-4 md:items-end items-center md:absolute bottom-20 right-20">
         <h1 className=" md:font-medium  font-medium md:text-[65px] md:leading-[74px]  text-6xl  text-center md:text-right">
           Quick Car Wash in <br className=" md:block hidden" />
