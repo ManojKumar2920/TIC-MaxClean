@@ -45,55 +45,35 @@ const Video: React.FC<VideoProps> = ({ posterSrc }) => {
     const video = videoRef.current;
     if (!video) return;
 
-    // Function to force play video
-    const forcePlay = async () => {
+    const attemptPlay = async () => {
       try {
-        // Set volume to 0 first
-        video.volume = 0;
+        // Ensure video is muted before attempting play
         video.muted = true;
-        
-        // Force load the video
-        await video.load();
-        
-        // Attempt to play
         await video.play();
-        
         console.log('Video started playing');
       } catch (error) {
         console.error('Autoplay failed:', error);
       }
     };
 
-    // Initial play attempt
-    forcePlay();
+    // Try to play on mount
+    attemptPlay();
 
-    // Add interaction handlers for iOS
+    // Add interaction listeners
     const playOnInteraction = () => {
       if (video.paused) {
-        forcePlay();
+        attemptPlay();
       }
     };
 
-    // Add multiple event listeners for different scenarios
-    const interactionEvents = ['touchstart', 'touchend', 'click', 'scroll'];
-    interactionEvents.forEach(event => {
+    ['touchstart', 'touchend', 'click'].forEach(event => {
       document.addEventListener(event, playOnInteraction, { once: true });
     });
 
-    // Handle visibility change
-    const handleVisibilityChange = () => {
-      if (document.visibilityState === 'visible') {
-        forcePlay();
-      }
-    };
-    document.addEventListener('visibilitychange', handleVisibilityChange);
-
-    // Cleanup
     return () => {
-      interactionEvents.forEach(event => {
+      ['touchstart', 'touchend', 'click'].forEach(event => {
         document.removeEventListener(event, playOnInteraction);
       });
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
   }, []);
 
@@ -116,6 +96,14 @@ const Video: React.FC<VideoProps> = ({ posterSrc }) => {
           }
         }}
         onLoadedData={(e) => {
+          const video = e.target as HTMLVideoElement;
+          try {
+            video.play();
+          } catch (error) {
+            console.error("Failed to play video:", error);
+          }
+        }}
+        onCanPlay={(e) => {
           const video = e.target as HTMLVideoElement;
           try {
             video.play();
@@ -147,7 +135,6 @@ const Video: React.FC<VideoProps> = ({ posterSrc }) => {
     </div>
   );
 };
-
 
 
 const Hero = () => {
