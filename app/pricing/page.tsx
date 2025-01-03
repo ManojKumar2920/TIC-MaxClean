@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Banner from "@/assets/pricing.png";
 import MobileNav from "@/components/MobileNavbar";
 import Link from "next/link";
@@ -8,6 +8,16 @@ import Footer from "@/components/Footer";
 import Navbar from "@/components/NavBar";
 
 const Pricing = () => {
+
+  // useEffect(() => {
+  //   fetch("/api/test-api", {
+  //     method: 'POST'
+  //   })
+  //     .then((response) => response.json())
+  //     .then((data) => console.log(data))
+  //     .catch((error) => console.error("Error fetching data:", error));
+  // }, []);
+
   const [isYearly, setIsYearly] = useState(false);
 
   return (
@@ -37,7 +47,7 @@ const Hero: React.FC<HeroProps> = ({ isYearly, setIsYearly }) => {
     >
       <div className="flex flex-col w-full h-full gap-10 md:-mt-20 items-center justify-center">
         <div className="flex flex-col items-center justify-center gap-6">
-          <h1 className="font-medium md:text-[65px] text-6xl md:leading-[74px] text-center">
+          <h1 className="font-medium md:text-[65px] text-4xl md:leading-[74px] text-center">
             Pricing plans <br className="hidden md:block" />
             for a spotless ride
           </h1>
@@ -103,7 +113,7 @@ const PricingCard = () => {
   ];
 
   return (
-    <div className="w-full flex flex-wrap z-[100] -mt-40 md:-mt-60 px-10 md:px-0 justify-center gap-8 py-16">
+    <div className="w-full flex flex-wrap z-[100] -mt-40 md:-mt-50 px-10 md:px-0 justify-center gap-8 py-16">
       {plans.map((plan, index) => (
         <div
           key={index}
@@ -207,7 +217,7 @@ const PricingCard2 = () => {
   ];
 
   return (
-    <div className="w-full flex flex-wrap z-[100] -mt-40 md:-mt-60 px-10 md:px-0 justify-center gap-8 py-16">
+    <div className="w-full flex flex-wrap z-[100] -mt-40 md:-mt-50 px-10 md:px-0 justify-center gap-8 py-16">
       {plans.map((plan, index) => (
         <div
           key={index}

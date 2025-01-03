@@ -42,6 +42,9 @@ export async function sendWelcomeMail(email: string, name: string) {
       text-align: center;
       padding: 30px 20px;
     }
+      .header .span-logo {
+        color: #D70006;
+      }
     .header img {
       max-width: 120px;
       margin-bottom: 10px;
@@ -82,7 +85,9 @@ export async function sendWelcomeMail(email: string, name: string) {
   <div class="email-container">
     <!-- Header -->
     <div class="header">
-      <img src="https://www.themaxclean.com/_next/static/media/logo.75d968a2.png" alt="MaxClean Logo" />
+      <h1>
+        MAX<span class="span-logo">CLEAN</span>
+      </h1>
       <h1>Welcome to MaxClean!</h1>
     </div>
 

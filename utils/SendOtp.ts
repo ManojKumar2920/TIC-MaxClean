@@ -113,13 +113,18 @@ export async function sendEmailOtp(email: string, otp: string) {
       color: #D70006;
       text-decoration: none;
     }
+    .header .span-logo {
+        color: #D70006;
+      }
   </style>
 </head>
 <body>
   <div class="email-container">
     <!-- Header -->
     <div class="header">
-      <img src="https://www.themaxclean.com/_next/static/media/logo.75d968a2.png" alt="MaxClean" />
+      <h1>
+        MAX<span class="span-logo">CLEAN</span>
+      </h1>
       <h1>Email Verification</h1>
     </div>
 

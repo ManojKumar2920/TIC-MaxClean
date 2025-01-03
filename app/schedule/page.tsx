@@ -13,6 +13,7 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Script from "next/script";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 const ScheduleWash = () => {
   return (
@@ -80,6 +81,8 @@ const Booking = () => {
     "Bi Weekly": "1199",
     "Weekly": "2199",
   };
+
+  const router = useRouter();
 
   const [selectedDate, setSelectedDate] = useState("");
   const [selectedService, setSelectedService] = useState<string>("");
@@ -239,6 +242,10 @@ const Booking = () => {
           if (verifyResponse.ok) {
             toast.success("Payment successful!");
             resetForm();
+            toast.loading("Redirecting...");
+            setTimeout(() => {
+              router.push("/order-history");
+            }, 3000);
           } else {
             toast.error(verifyResult.message || "Payment verification failed");
           }

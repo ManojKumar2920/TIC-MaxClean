@@ -75,6 +75,8 @@ export async function POST(req: Request) {
       await sendOrderMail(
         order.name,
         order.email,
+        order.phoneNumber,
+        order.address,
         order.service,
         order.price,
         order.date,

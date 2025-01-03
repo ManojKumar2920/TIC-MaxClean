@@ -15,7 +15,7 @@ export const sendOrderSMS = async (order: {
     const data = qs.stringify({
       module: "TRANS_SMS",
       apikey: process.env.TWOFACTOR_API_KEY,
-      to: "7780275118,9885312902,9515813423,8179987444", // Team numbers
+      to: "9597028220,7780275118,9885312902,9515813423,8179987444", // Team numbers
       from: "MAXCLA", // Approved Sender ID
       templatename: "sendOrderDetailsToTeam", // Approved template name
       var1: order.name || "N/A",

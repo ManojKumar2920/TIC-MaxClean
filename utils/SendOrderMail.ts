@@ -3,6 +3,8 @@ import nodemailer from "nodemailer";
 export const sendOrderMail = async (
   name: string,
   email: string,
+  phoneNumber: string,
+  address: string,
   service: string,
   price: number,
   date: string,
@@ -100,7 +102,9 @@ export const sendOrderMail = async (
   <div class="email-container">
     <!-- Header -->
     <div class="header">
-      <img src="https://www.themaxclean.com/_next/static/media/logo.75d968a2.png" alt="MaxClean" />
+      <h1 className="text-2xl font-bold helvetica">
+        MAX<span className="text-red-500">CLEAN</span>
+      </h1>
       <h1>Order Confirmation</h1>
     </div>
 
@@ -117,6 +121,8 @@ export const sendOrderMail = async (
         <p><strong>Price:</strong> ₹${price}</p>
         <p><strong>Date:</strong> ${date}</p>
         <p><strong>Time Slot:</strong> ${timeSlot}</p>
+        <p><strong>Address:</strong> ${address}</p>
+        <p><strong>Phone Number:</strong> ${phoneNumber}</p>
       </div>
 
       <p>If you have any questions or need assistance, please feel free to contact us at <a href="mailto:maxcleanbusiness@gmail.com">maxcleanbusiness@gmail.com</a>.</p>

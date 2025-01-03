@@ -73,7 +73,8 @@ export async function GET(req: unknown, res: unknown) {
       const bookedOrders = await Order.find({
         date: date,
         timeSlot: { $in: SLOTS },
-        paymentStatus: { $nin: ["Pending", "Cancelled"] }
+        paymentStatus: { $nin: ["Pending", "Cancelled"] },
+        status: { $nin: ["Rejected"] }
       });
 
       // Extract booked time slots

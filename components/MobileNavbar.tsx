@@ -49,7 +49,7 @@ const Navbar = () => {
 
   return (
     <>
-      <div className="absolute md:hidden overflow-hidden z-10 top-0 left-0 w-full flex items-center justify-between p-6 lg:p-10">
+      <div className="absolute md:hidden overflow-hidden z-40 top-0 left-0 w-full flex items-center justify-between p-6 lg:p-10">
         {/* Logo */}
         <motion.div
           initial={{ opacity: 0, x: -100 }}
