@@ -35,8 +35,31 @@ export default function Home() {
 };
  
  const Video: React.FC = () => {
+  React.useEffect(() => {
+    const video = document.getElementById("backgroundVideo") as HTMLVideoElement;
+
+    const playVideo = () => {
+      if (video) {
+        video.play().catch((error) => {
+          console.error("Auto-play was prevented:", error);
+        });
+      }
+    };
+
+    playVideo();
+
+    document.body.addEventListener(
+      "touchstart",
+      function () {
+        playVideo();
+      },
+      { once: true }
+    );
+  }, []);
+
   return (
     <video
+      id="backgroundVideo"
       autoPlay
       loop
       muted
@@ -45,12 +68,6 @@ export default function Home() {
       preload="auto"
       poster={Banner.src}
       className="absolute inset-0 h-full w-full object-cover"
-      onLoadedMetadata={(e) => {
-        const video = e.target as HTMLVideoElement;
-        video.play().catch(error => {
-          console.log("Auto-play failed:", error);
-        });
-      }}
     >
       <source
         src="https://ik.imagekit.io/7da6fpjdo/Maxclean.webm/ik-video.mp4?updatedAt=1733564402262"
