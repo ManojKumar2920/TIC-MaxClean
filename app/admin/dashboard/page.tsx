@@ -426,7 +426,10 @@ export default function Dashboard() {
     return;
   }, []);
 
-  const handleDownloadReceipt = async (orderId: string, paymentStatus: string) => {
+  const handleDownloadReceipt = async (
+    orderId: string,
+    paymentStatus: string
+  ) => {
     try {
       if (paymentStatus !== "Success") {
         toast.info("Receipt is only available for successful payments");
@@ -461,7 +464,6 @@ export default function Dashboard() {
       alert("Failed to download receipt. Please try again.");
     }
   };
-
 
   // const fetchOrderDetails = async (orderId: string) => {
   //   try {
@@ -1393,12 +1395,21 @@ export default function Dashboard() {
                           </span>
                         </TableCell>
                         <TableCell>
-                        <Button
+                          <Button
                             variant="ghost"
                             size="sm"
-                            onClick={(e) => order.paymentStatus === "Success" ? handleDownloadReceipt(order._id, order.paymentStatus) : null}
+                            onClick={(e) =>
+                              order.paymentStatus === "Success"
+                                ? handleDownloadReceipt(
+                                    order._id,
+                                    order.paymentStatus
+                                  )
+                                : null
+                            }
                           >
-                            {order.paymentStatus === "Success" ? "Download" : "Not Available"}
+                            {order.paymentStatus === "Success"
+                              ? "Download"
+                              : "Not Available"}
                           </Button>
                         </TableCell>
                         <TableCell>
@@ -1474,6 +1485,11 @@ export default function Dashboard() {
                         ?.status === "Completed" ? (
                         <p className="text-center text-gray-500">
                           Order is already completed
+                        </p>
+                      ) : orders.find((o: any) => o._id === selectedOrderId)
+                          ?.status === "Rejected" ? (
+                        <p className="text-center text-gray-500">
+                          You can't do anything, Order is already cancelled!!
                         </p>
                       ) : orders.find((o: any) => o._id === selectedOrderId)
                           ?.status === "Accepted" ? (
