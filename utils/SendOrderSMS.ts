@@ -10,7 +10,7 @@ export const sendOrderSMS = async (order: {
   phone: string;
   address: string;
   razorpayOrderId: string | undefined;
-}, service: any, price: any, date: any, timeSlot: any, phoneNumber: any, address: any, razorpayOrderId: any): Promise<void> => {
+}): Promise<void> => {
   try {
     const data = qs.stringify({
       module: "TRANS_SMS",
@@ -45,8 +45,10 @@ export const sendOrderSMS = async (order: {
     }
 
     console.log("SMS notification sent successfully:", response.data);
+
   } catch (error: any) {
     console.error("Error sending SMS notification:", error?.response?.data || error.message);
     throw new Error("Failed to send SMS notification to the team.");
   }
 };
+
