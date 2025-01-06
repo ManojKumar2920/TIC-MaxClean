@@ -351,7 +351,7 @@ export default function Dashboard() {
 
       const calculateMetrics = (orders: Order[]) => {
         const totalRevenue = orders
-          .filter((order) => order.paymentStatus === "Success")
+          .filter((order) => order.paymentStatus === "Success" && order.status !== "Rejected")
           .reduce((sum, order) => {
             const orderPrice = Number(order.price) || 0;
             return sum + orderPrice;
