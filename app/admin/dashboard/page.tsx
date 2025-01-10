@@ -361,7 +361,6 @@ export default function Dashboard() {
         const completedOrders = orders.filter(
           (order) => order.status === "Completed"
         ).length;
-        
 
         return { revenue: totalRevenue, totalOrders, completedOrders };
       };
