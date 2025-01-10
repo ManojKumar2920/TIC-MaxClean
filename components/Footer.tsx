@@ -114,7 +114,7 @@ const Footer = () => {
           <span className="text-[#d70007e9] font-bold">TIC Global</span>
         </p> */}
         <p className="text-white/70  md:text-[14px]">
-          © {new Date().getFullYear()} <Link href={'/'}>Maxclean</Link>. All rights reserved!
+          © {new Date().getFullYear()} <Link href={'/'}>Maxclean</Link>. All rights reserved..!
         </p>
       </div>
     </footer>
