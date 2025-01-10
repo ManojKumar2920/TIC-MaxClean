@@ -64,7 +64,7 @@ const Faq = () => {
             Contact us here:
           </p>
           <a
-            href="tel:+919876543210"
+            href="tel:+918179987444"
             className="text-[#FF0000] border  whitespace-nowrap  rounded-lg px-8 py-2 font-bold text-lg"
           >
             +91-8179987444

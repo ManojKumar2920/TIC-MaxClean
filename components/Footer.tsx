@@ -26,10 +26,13 @@ const Footer = () => {
             <h3 className="text-[24px] text-left font-bold text-[#D70006]">
               CALL US ANYTIME
             </h3>
-            <p className="text-gray-400 text-lg font-medium  text-left">
-              +91-8179987444
+            <p className="text-gray-400 text-lg font-medium text-left">
+              <a href="tel:+918179987444" className="hover:underline">
+                +91-8179987444
+              </a>
             </p>
-           
+
+
           </div>
           <div className="mb-4 md:mb-0  md:flex hidden    flex-col   items-center text-center">
             <div className=" text-white/70 flex gap-20  md:text-center text-left items-start justify-center text-[16px] mt-2">
