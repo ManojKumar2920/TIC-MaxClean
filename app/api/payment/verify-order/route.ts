@@ -5,8 +5,9 @@ import Razorpay from "razorpay";
 import crypto from "crypto";
 import { sendOrderMail } from "@/utils/SendOrderMail";
 import { sendOrderSMS } from "@/utils/SendOrderSMS";
+import { Landmark } from "lucide-react";
 
-const { RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET } = process.env ;
+const { RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET } = process.env;
 
 if (!RAZORPAY_KEY_ID || !RAZORPAY_KEY_SECRET) {
   throw new Error("Missing Razorpay keys in environment variables");
@@ -21,10 +22,19 @@ export async function POST(req: Request) {
   try {
     await connectDB();
 
-    const { razorpay_order_id, razorpay_payment_id, razorpay_signature, orderId } =
-      await req.json();
+    const {
+      razorpay_order_id,
+      razorpay_payment_id,
+      razorpay_signature,
+      orderId,
+    } = await req.json();
 
-    if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature || !orderId) {
+    if (
+      !razorpay_order_id ||
+      !razorpay_payment_id ||
+      !razorpay_signature ||
+      !orderId
+    ) {
       return NextResponse.json(
         { message: "Missing required payment details." },
         { status: 400 }
@@ -45,7 +55,7 @@ export async function POST(req: Request) {
     }
 
     // Retrieve order
-    const order = await Order.findOne({ razorpayOrderId : razorpay_order_id });
+    const order = await Order.findOne({ razorpayOrderId: razorpay_order_id });
 
     if (!order) {
       return NextResponse.json(
@@ -70,6 +80,19 @@ export async function POST(req: Request) {
     order.paymentStatus = paymentStatus;
     order.razorpayPaymentId = razorpay_payment_id;
 
+    const orderDetails = {
+      name: order.name,
+      service: order.service,
+      price: order.price,
+      date: order.date,
+      timeSlot: order.timeSlot,
+      phone: order.phoneNumber,
+      address: order.address,
+      razorpayOrderId: order.razorpayOrderId,
+      pincode: order.pincode,
+      landmark: order.landmark,
+    };
+
     // If payment is successful, update the status to "Completed"
     if (paymentStatus === "Success") {
       await sendOrderMail(
@@ -83,23 +106,16 @@ export async function POST(req: Request) {
         order.timeSlot,
         order.razorpayOrderId
       );
-      
 
-      await sendOrderSMS(
-        order.name,
-        order.service,
-        order.price,
-        order.date,
-        order.timeSlot,
-        order.phoneNumber,
-        order.address,
-        order.razorpayOrderId
-      );
+      await sendOrderSMS(orderDetails);
     }
     await order.save();
 
     return NextResponse.json(
-      { message: "Payment verified and order updated successfully.", status: paymentStatus },
+      {
+        message: "Payment verified and order updated successfully.",
+        status: paymentStatus,
+      },
       { status: 200 }
     );
   } catch (error) {

@@ -1,7 +1,7 @@
 import qs from "qs";
 import axios, { AxiosRequestConfig } from "axios";
 
-export const sendOrderSMS =  async (order: {
+export const sendOrderSMS = async (order: {
   name: string;
   service: string;
   price: number;
@@ -10,7 +10,9 @@ export const sendOrderSMS =  async (order: {
   phone: string;
   address: string;
   razorpayOrderId: string | undefined;
-}, service: any, price: any, date: any, timeSlot: any, phoneNumber: any, address: any, razorpayOrderId: any): Promise<void> => {
+  landmark: string;
+  pincode: string;
+}): Promise<void> => {
   try {
     const data = qs.stringify({
       module: "TRANS_SMS",
@@ -18,14 +20,14 @@ export const sendOrderSMS =  async (order: {
       to: "9597028220,7780275118,9885312902,9515813423,8179987444", // Team numbers
       from: "MAXCLA", // Approved Sender ID
       templatename: "sendOrderDetailsToTeam", // Approved template name
-      var1: order.name || "N/A",
-      var2: order.service || "N/A",
-      var3: order.price || "N/A",
-      var4: order.date || "N/A",
-      var5: order.timeSlot || "N/A",
-      var6: order.phone || "N/A",
-      var7: order.address || "N/A",
-      var8: order.razorpayOrderId || "N/A",
+      var1: order.name || "", 
+      var2: order.address || "",
+      var3: order.landmark || "", 
+      var4: order.pincode || "",
+      var5: order.phone || "",
+      var6: order.date || "",
+      var7: order.timeSlot || "",
+      var8: order.service || "",
     });
 
     const config: AxiosRequestConfig = {
@@ -51,4 +53,3 @@ export const sendOrderSMS =  async (order: {
     throw new Error("Failed to send SMS notification to the team.");
   }
 };
-

@@ -286,6 +286,27 @@ export default function Dashboard() {
   const [dateFilter, setDateFilter] = useState<string>("all");
   const [filteredOrders, setFilteredOrders] = useState<Order[]>(orders);
 
+  const [paymentStatusFilter, setPaymentStatusFilter] = useState<string>("success");
+
+  const handlePaymentStatusFilterChange = (status: string) => {
+    setPaymentStatusFilter(status);
+  };
+
+  // Helper function to filter orders based on payment status
+  const filterOrdersByPaymentStatus = (orders: Order[], status: string) => {
+    switch (status) {
+      case "success":
+        return orders.filter((order) => order.paymentStatus === "Success");
+      case "pending":
+        return orders.filter((order) => order.paymentStatus === "Pending");
+      case "canceled":
+        return orders.filter((order) => order.paymentStatus === "Canceled");
+      case "all":
+      default:
+        return orders;
+    }
+  };
+
   // Handle date filter change
   const handleDateFilterChange = (filter: string) => {
     setDateFilter(filter);
@@ -317,11 +338,18 @@ export default function Dashboard() {
     }
   };
 
-  // Re-filter orders whenever `dateFilter` changes
+  // Combine both filters
+  const applyFilters = (orders: Order[]) => {
+    let filtered = filterOrdersByDate(orders, dateFilter);
+    filtered = filterOrdersByPaymentStatus(filtered, paymentStatusFilter);
+    return filtered;
+  };
+
+  // Re-filter orders whenever `dateFilter` or `paymentStatusFilter` changes
   useEffect(() => {
-    const filtered = filterOrdersByDate(orders, dateFilter);
+    const filtered = applyFilters(orders);
     setFilteredOrders(filtered);
-  }, [dateFilter, orders]);
+  }, [dateFilter, paymentStatusFilter, orders]);
 
   const fetchOrders = async () => {
     try {
@@ -351,7 +379,10 @@ export default function Dashboard() {
 
       const calculateMetrics = (orders: Order[]) => {
         const totalRevenue = orders
-          .filter((order) => order.paymentStatus === "Success" && order.status !== "Rejected")
+          .filter(
+            (order) =>
+              order.paymentStatus === "Success" && order.status !== "Rejected"
+          )
           .reduce((sum, order) => {
             const orderPrice = Number(order.price) || 0;
             return sum + orderPrice;
@@ -1295,47 +1326,96 @@ export default function Dashboard() {
             </div>
 
             {/* Filter Buttons */}
-            <div className="flex space-x-4 mb-4">
-              <Button
-                onClick={() => handleDateFilterChange("today")}
-                className={
-                  dateFilter === "today"
-                    ? "bg-black text-white whitespace-nowrap rounded-[8px] px-5 py-2"
-                    : ""
-                }
-              >
-                Today
-              </Button>
-              <Button
-                onClick={() => handleDateFilterChange("last7days")}
-                className={
-                  dateFilter === "last7days"
-                    ? "bg-black text-white whitespace-nowrap rounded-[8px] px-5 py-2"
-                    : ""
-                }
-              >
-                Last 7 Days
-              </Button>
-              <Button
-                onClick={() => handleDateFilterChange("last30days")}
-                className={
-                  dateFilter === "last30days"
-                    ? "bg-black text-white whitespace-nowrap rounded-[8px] px-5 py-2"
-                    : ""
-                }
-              >
-                Last 30 Days
-              </Button>
-              <Button
-                onClick={() => handleDateFilterChange("all")}
-                className={
-                  dateFilter === "all"
-                    ? "bg-black text-white whitespace-nowrap rounded-[8px] px-5 py-2"
-                    : ""
-                }
-              >
-                All Orders
-              </Button>
+            <div className="flex flex-col space-y-4 mb-4">
+              {/* Date Filters */}
+              <p className=" font-semibold">Filter by Date</p>
+              <div className="flex space-x-4">
+                <Button
+                  onClick={() => handleDateFilterChange("all")}
+                  className={
+                    dateFilter === "all"
+                      ? "bg-black text-white whitespace-nowrap rounded-[8px] px-5 py-2"
+                      : ""
+                  }
+                >
+                  All Orders
+                </Button>
+                <Button
+                  onClick={() => handleDateFilterChange("today")}
+                  className={
+                    dateFilter === "today"
+                      ? "bg-black text-white whitespace-nowrap rounded-[8px] px-5 py-2"
+                      : ""
+                  }
+                >
+                  Today
+                </Button>
+                <Button
+                  onClick={() => handleDateFilterChange("last7days")}
+                  className={
+                    dateFilter === "last7days"
+                      ? "bg-black text-white whitespace-nowrap rounded-[8px] px-5 py-2"
+                      : ""
+                  }
+                >
+                  Last 7 Days
+                </Button>
+                <Button
+                  onClick={() => handleDateFilterChange("last30days")}
+                  className={
+                    dateFilter === "last30days"
+                      ? "bg-black text-white whitespace-nowrap rounded-[8px] px-5 py-2"
+                      : ""
+                  }
+                >
+                  Last 30 Days
+                </Button>
+              </div>
+
+              {/* Payment Status Filters */}
+              <p className=" font-semibold">Filter by Payment Status</p>
+              <div className="flex space-x-4">
+                <Button
+                  onClick={() => handlePaymentStatusFilterChange("all")}
+                  className={
+                    paymentStatusFilter === "all"
+                      ? "bg-black text-white whitespace-nowrap rounded-[8px] px-5 py-2"
+                      : ""
+                  }
+                >
+                  All Orders
+                </Button>
+                <Button
+                  onClick={() => handlePaymentStatusFilterChange("success")}
+                  className={
+                    paymentStatusFilter === "success"
+                      ? "bg-black text-white whitespace-nowrap rounded-[8px] px-5 py-2"
+                      : ""
+                  }
+                >
+                  Success
+                </Button>
+                <Button
+                  onClick={() => handlePaymentStatusFilterChange("pending")}
+                  className={
+                    paymentStatusFilter === "pending"
+                      ? "bg-black text-white whitespace-nowrap rounded-[8px] px-5 py-2"
+                      : ""
+                  }
+                >
+                  Pending
+                </Button>
+                <Button
+                  onClick={() => handlePaymentStatusFilterChange("canceled")}
+                  className={
+                    paymentStatusFilter === "canceled"
+                      ? "bg-black text-white whitespace-nowrap rounded-[8px] px-5 py-2"
+                      : ""
+                  }
+                >
+                  Canceled
+                </Button>
+              </div>
             </div>
 
             <div>
