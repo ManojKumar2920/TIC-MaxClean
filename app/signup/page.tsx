@@ -29,6 +29,7 @@ const SignupPage = () => {
     }));
   };
 
+
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);  // Clear any previous error
@@ -105,11 +106,11 @@ const SignupPage = () => {
           return;
         }
 
-        toast.success("Signup successful! Redirecting to Sign in...");
+        toast.success("Signup successful! Redirecting to Home...");
 
 
         // If OTP verification is successful, sign the user in
-        router.push('/signin')
+        router.push('/')
       } catch (err) {
         toast.error("Error completing signup");
         setError("Error completing signup");
